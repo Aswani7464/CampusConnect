@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Dashboard - CampusConnect</title>
+<style>
+:root{--primary:#3157d5;--dark:#2343ad;--ink:#172033;--muted:#667085;--border:#e4e9f2}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#f4f7fc;line-height:1.5}a{color:inherit;text-decoration:none}
+.navbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 6%;background:#fff;border-bottom:1px solid var(--border)}
+.brand{color:var(--primary);font-size:1.25rem;font-weight:800}.nav-links{display:flex;flex-wrap:wrap;gap:18px;color:#475467;font-size:.95rem}
+.hero{padding:38px 6% 30px;color:white;background:linear-gradient(120deg,#2443aa,#4778ee)}.eyebrow{margin:0 0 8px;font-size:.8rem;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;opacity:.85}.hero h1{margin:0 0 8px;font-size:clamp(1.8rem,4vw,2.6rem)}.hero p:last-child{max-width:650px;margin:0;color:#e9efff}
+main{width:min(1120px,88%);margin:28px auto 56px}.top-row{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}.top-row h2{margin:0;font-size:1.5rem}
+.page-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px}.page-actions a,.page-actions button{display:inline-flex;align-items:center;justify-content:center;padding:9px 13px;border:1px solid var(--border);border-radius:10px;background:white;color:#344054;font:inherit;cursor:pointer}.page-actions .home{background:#eaf0ff;border-color:#d9e3ff;color:var(--dark)}
+.dashboard-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.card{display:flex;flex-direction:column;min-height:230px;padding:23px;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:0 12px 30px rgba(25,45,90,.08)}
+.card-icon{display:grid;place-items:center;width:48px;height:48px;margin-bottom:15px;border-radius:14px;background:#edf2ff;font-size:1.45rem}.card h3{margin:0 0 8px;font-size:1.12rem}.card p{margin:0 0 18px;color:var(--muted);font-size:.95rem}.card-button{display:inline-flex;align-self:flex-start;margin-top:auto;padding:9px 13px;border-radius:9px;background:var(--primary);color:white;font-weight:700;font-size:.9rem}.card-button:hover{background:var(--dark)}.footer{padding:20px;text-align:center;color:var(--muted);font-size:.88rem}
+@media(max-width:850px){.dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.navbar{align-items:flex-start;flex-direction:column}.nav-links{gap:12px}main{width:90%}.dashboard-grid{grid-template-columns:1fr}.card{min-height:205px}}
+</style>
+</head>
+<body>
+<nav class="navbar">
+<a class="brand" href="index.html">CampusConnect</a>
+<div class="nav-links"><a href="index.html">Home</a><a href="events.html">Explore Events</a><a href="my-events.html">My Events</a><a href="student-details.html">My Profile</a><a href="login.html" id="logoutLink">Logout</a></div>
+</nav>
+<header class="hero"><p class="eyebrow">Student Portal</p><h1 id="welcomeHeading">Welcome back, Student!</h1><p>Discover campus activities, manage your registrations, and keep up with what's happening at your college.</p></header>
+<main>
+<div class="top-row"><h2>Your Dashboard</h2><div class="page-actions"><button type="button" onclick="history.back()">← Back</button><a href="index.html" class="home">⌂ Home</a></div></div>
+<section class="dashboard-grid" aria-label="Student dashboard options">
+<article class="card"><div class="card-icon" aria-hidden="true">🎉</div><h3>Explore Events</h3><p>Browse campus events and find activities that interest you.</p><a class="card-button" href="events.html">Browse Events →</a></article>
+<article class="card"><div class="card-icon" aria-hidden="true">📅</div><h3>My Registered Events</h3><p>View the events you have registered for and manage your registrations.</p><a class="card-button" href="my-events.html">View My Events →</a></article>
+<article class="card"><div class="card-icon" aria-hidden="true">👤</div><h3>My Profile</h3><p>View your student profile and account details.</p><a class="card-button" href="student-details.html">Open Profile →</a></article>
+<article class="card"><div class="card-icon" aria-hidden="true">🔔</div><h3>Notifications</h3><p>Check your registered events for registration information.</p><a class="card-button" href="my-events.html">Check Updates →</a></article>
+<article class="card"><div class="card-icon" aria-hidden="true">🏫</div><h3>Campus Home</h3><p>Return to the CampusConnect home page to see the portal overview.</p><a class="card-button" href="index.html">Go to Home →</a></article>
+<article class="card"><div class="card-icon" aria-hidden="true">🚪</div><h3>Sign Out</h3><p>Log out of your student account and return to the login page.</p><a class="card-button" href="login.html" id="logoutCard">Logout →</a></article>
+</section>
+</main>
+<footer class="footer">CampusConnect — Campus Event Portal</footer>
+<script>
+const studentName=localStorage.getItem("campusStudentName");
+const welcomeHeading=document.getElementById("welcomeHeading");
+if(studentName&&studentName.trim()){welcomeHeading.textContent=`Welcome back, ${studentName.trim()}!`;}
+function clearStudentSession(){localStorage.removeItem("campusStudentId");localStorage.removeItem("campusStudentName");localStorage.removeItem("campusStudentEmail");}
+document.getElementById("logoutLink").addEventListener("click",clearStudentSession);
+document.getElementById("logoutCard").addEventListener("click",clearStudentSession);
+</script>
+</body>
+</html>

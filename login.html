@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CampusConnect</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .login-box {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #222;
+            font-size: 25px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            margin-top: -15px;
+            margin-bottom: 22px;
+        }
+
+        .form-group { margin-bottom: 18px; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus { border-color: #2563eb; }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover { background: #1d4ed8; }
+
+        .organizer-button {
+            background: #047857;
+        }
+
+        .organizer-button:hover {
+            background: #065f46;
+        }
+
+        .switch-link {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #2563eb;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .switch-link:hover { text-decoration: underline; }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .signup-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .signup-option {
+            border: 1px solid #dbeafe;
+            border-radius: 10px;
+            padding: 15px 8px;
+            text-align: center;
+            cursor: pointer;
+            background: #f8fafc;
+        }
+
+        .signup-option:hover {
+            background: #eff6ff;
+            border-color: #2563eb;
+        }
+
+        .signup-option.organizer {
+            border-color: #a7f3d0;
+        }
+
+        .signup-option.organizer:hover {
+            background: #ecfdf5;
+            border-color: #047857;
+        }
+
+        .option-title {
+            font-weight: bold;
+            margin-bottom: 7px;
+            color: #222;
+        }
+
+        .option-description {
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .demo-accounts {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .demo-accounts strong { color: #222; }
+
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+
+<body>
+<div class="login-container">
+    <div class="login-box">
+        <div class="logo">CampusConnect</div>
+
+        <!-- ONE COMMON LOGIN FORM -->
+        <section id="loginSection">
+            <h1>Welcome Back!</h1>
+            <p class="subtitle">Login to your CampusConnect account</p>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail"
+                           placeholder="Enter your email"
+                           autocomplete="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword"
+                           placeholder="Enter your password"
+                           autocomplete="current-password" required>
+                </div>
+
+                <button type="submit">Login</button>
+            </form>
+
+            <p class="subtitle" style="margin: 22px 0 0;">
+                Don't have an account? Choose your account type:
+            </p>
+
+            <div class="signup-options">
+                <div class="signup-option" id="showStudentSignup"
+                     role="button" tabindex="0">
+                    <div class="option-title">🎓 Student</div>
+                    <div class="option-description">
+                        Register for campus events
+                    </div>
+                </div>
+
+                <div class="signup-option organizer"
+                     id="showOrganizerSignup"
+                     role="button" tabindex="0">
+                    <div class="option-title">📅 Organizer</div>
+                    <div class="option-description">
+                        Create and manage events
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STUDENT SIGN UP -->
+        <section id="studentSignupSection" class="hidden">
+            <h1>Student Sign Up</h1>
+            <p class="subtitle">Create your student account</p>
+
+            <form id="studentSignupForm">
+                <div class="form-group">
+                    <label for="studentName">Full Name</label>
+                    <input type="text" id="studentName"
+                           placeholder="Enter your full name"
+                           autocomplete="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentEmail">College Email</label>
+                    <input type="email" id="studentEmail"
+                           placeholder="Enter your email"
+                           autocomplete="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentPassword">Password</label>
+                    <input type="password" id="studentPassword"
+                           placeholder="Create a password"
+                           minlength="8" autocomplete="new-password"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentConfirmPassword">
+                        Confirm Password
+                    </label>
+                    <input type="password" id="studentConfirmPassword"
+                           placeholder="Enter password again"
+                           minlength="8" autocomplete="new-password"
+                           required>
+                </div>
+
+                <button type="submit">Create Student Account</button>
+            </form>
+
+            <a class="switch-link backToLogin" href="#">
+                Already have an account? Login
+            </a>
+        </section>
+
+        <!-- ORGANIZER SIGN UP -->
+        <section id="organizerSignupSection" class="hidden">
+            <h1>Organizer Sign Up</h1>
+            <p class="subtitle">Create an account to manage campus events</p>
+
+            <form id="organizerSignupForm">
+                <div class="form-group">
+                    <label for="organizerName">Full Name</label>
+                    <input type="text" id="organizerName"
+                           placeholder="Enter your full name"
+                           autocomplete="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="organizerEmail">College Email</label>
+                    <input type="email" id="organizerEmail"
+                           placeholder="Enter your college email"
+                           autocomplete="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="organizerPassword">Password</label>
+                    <input type="password" id="organizerPassword"
+                           placeholder="Create a password"
+                           minlength="8" autocomplete="new-password"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label for="organizerConfirmPassword">
+                        Confirm Password
+                    </label>
+                    <input type="password" id="organizerConfirmPassword"
+                           placeholder="Enter password again"
+                           minlength="8" autocomplete="new-password"
+                           required>
+                </div>
+
+                <button type="submit" class="organizer-button">
+                    Create Organizer Account
+                </button>
+            </form>
+
+            <p class="subtitle" style="margin: 15px 0 0;">
+                Organizer access should be verified before event-management
+                permissions are granted.
+            </p>
+
+            <a class="switch-link backToLogin" href="#">
+                Already have an account? Login
+            </a>
+        </section>
+
+        <p id="message" class="message"
+           role="status" aria-live="polite"></p>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+
+        <div class="demo-accounts">
+            <strong>Existing Demo Accounts</strong><br><br>
+
+            <strong>Student</strong><br>
+            rahul@college.edu<br>
+            student123<br><br>
+
+            <strong>Organizer</strong><br>
+            priya@college.edu<br>
+            organizer123<br><br>
+
+            <strong>Admin</strong><br>
+            admin@college.edu<br>
+            admin123
+        </div>
+    </div>
+</div>
+
+<script>
+    const loginSection = document.getElementById("loginSection");
+    const studentSignupSection =
+        document.getElementById("studentSignupSection");
+    const organizerSignupSection =
+        document.getElementById("organizerSignupSection");
+    const message = document.getElementById("message");
+
+    function showSection(section) {
+        loginSection.classList.add("hidden");
+        studentSignupSection.classList.add("hidden");
+        organizerSignupSection.classList.add("hidden");
+
+        section.classList.remove("hidden");
+        message.textContent = "";
+    }
+
+    document.getElementById("showStudentSignup")
+        .addEventListener("click", () => showSection(studentSignupSection));
+
+    document.getElementById("showOrganizerSignup")
+        .addEventListener("click", () => showSection(organizerSignupSection));
+
+    document.getElementById("showStudentSignup")
+        .addEventListener("keydown", function (event) {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                showSection(studentSignupSection);
+            }
+        });
+
+    document.getElementById("showOrganizerSignup")
+        .addEventListener("keydown", function (event) {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                showSection(organizerSignupSection);
+            }
+        });
+
+    document.querySelectorAll(".backToLogin").forEach(link => {
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+            showSection(loginSection);
+        });
+    });
+
+    async function readResponse(response) {
+        const text = await response.text();
+
+        try {
+            return text ? JSON.parse(text) : {};
+        } catch {
+            return { message: text || "The server returned an invalid response." };
+        }
+    }
+
+    document.getElementById("loginForm")
+        .addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            message.textContent = "Logging in...";
+
+            const email = document.getElementById("loginEmail").value.trim();
+            const password = document.getElementById("loginPassword").value;
+
+            try {
+                const response = await fetch("/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: new URLSearchParams({ email, password })
+                });
+
+                const result = await readResponse(response);
+
+                if (!response.ok) {
+                    message.textContent = result.message || "Login failed.";
+                    return;
+                }
+
+                if (result.role === "student") {
+                    localStorage.setItem("campusStudentId", result.studentId);
+                    localStorage.setItem("campusStudentName", result.name);
+                    localStorage.setItem("campusStudentEmail", result.email);
+                    window.location.href = "student-dashboard.html";
+               } else if (result.role === "organizer") {
+    localStorage.setItem("campusOrganizerName", result.name);
+    localStorage.setItem("campusOrganizerEmail", result.email);
+
+    localStorage.removeItem("campusStudentId");
+    localStorage.removeItem("campusStudentName");
+    localStorage.removeItem("campusStudentEmail");
+
+    window.location.href = "organizer-dashboard.html";
+                } else if (result.role === "admin") {
+                    message.textContent =
+                        "Admin login successful. Admin dashboard is not connected yet.";
+                } else {
+                    message.textContent = "Unknown account role.";
+                }
+            } catch (error) {
+                console.error(error);
+                message.textContent =
+                    "Cannot connect to the server. Check that it is running.";
+            }
+        });
+
+    async function submitSignup(formId, fields, endpoint, accountType) {
+        const form = document.getElementById(formId);
+        const name = document.getElementById(fields.name).value.trim();
+        const email = document.getElementById(fields.email).value.trim();
+        const password = document.getElementById(fields.password).value;
+        const confirmPassword =
+            document.getElementById(fields.confirmPassword).value;
+
+        if (password !== confirmPassword) {
+            message.textContent = "Passwords do not match.";
+            return;
+        }
+
+        message.textContent = "Creating your account...";
+
+        try {
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({ name, email, password })
+            });
+
+            const result = await readResponse(response);
+
+            if (!response.ok) {
+                message.textContent = result.message || "Sign up failed.";
+                return;
+            }
+
+            message.textContent =
+                accountType + " account created! Please log in.";
+
+            form.reset();
+            document.getElementById("loginEmail").value = email;
+            showSection(loginSection);
+        } catch (error) {
+            console.error(error);
+            message.textContent =
+                "Cannot connect to the server. Check that it is running.";
+        }
+    }
+
+    document.getElementById("studentSignupForm")
+        .addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            submitSignup("studentSignupForm", {
+                name: "studentName",
+                email: "studentEmail",
+                password: "studentPassword",
+                confirmPassword: "studentConfirmPassword"
+            }, "/signup", "Student");
+        });
+
+    document.getElementById("organizerSignupForm")
+        .addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            submitSignup("organizerSignupForm", {
+                name: "organizerName",
+                email: "organizerEmail",
+                password: "organizerPassword",
+                confirmPassword: "organizerConfirmPassword"
+            }, "/organizer-signup", "Organizer");
+        });
+</script>
+</body>
+</html>

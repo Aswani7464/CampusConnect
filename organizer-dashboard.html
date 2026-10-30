@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Organizer Dashboard - CampusConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        nav {
+            background: #2563eb;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .welcome {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: white;
+            padding: 45px 7%;
+        }
+
+        .welcome h1 {
+            margin-top: 0;
+            font-size: 32px;
+        }
+
+        .welcome p {
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 1150px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            margin-bottom: 8px;
+        }
+
+        .section-description {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e5e7eb;
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #1d4ed8;
+        }
+
+        .card p {
+            color: #64748b;
+            line-height: 1.6;
+            min-height: 72px;
+        }
+
+        .card-button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 12px 16px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .card-button:hover {
+            background: #1d4ed8;
+        }
+
+        .green-button {
+            background: #15803d;
+        }
+
+        .green-button:hover {
+            background: #166534;
+        }
+
+        .purple-button {
+            background: #7c3aed;
+        }
+
+        .purple-button:hover {
+            background: #6d28d9;
+        }
+
+        .orange-button {
+            background: #c2410c;
+        }
+
+        .orange-button:hover {
+            background: #9a3412;
+        }
+
+        footer {
+            margin-top: 50px;
+            background: #1e293b;
+            color: white;
+            text-align: center;
+            padding: 22px;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                padding: 18px;
+            }
+
+            nav a {
+                margin-left: 8px;
+            }
+
+            .welcome h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">CampusConnect</div>
+
+        <div>
+            <a href="index.html">Home</a>
+            <a href="organizer-dashboard.html">Dashboard</a>
+            <a href="login.html">Logout</a>
+        </div>
+    </nav>
+
+    <section class="welcome">
+       <h1 id="organizerWelcome">Welcome, Organizer!</h1>
+        <p>
+            Organizer Dashboard — Create campus events, manage registrations,
+            and track student attendance in one place.
+        </p>
+    </section>
+
+    <main>
+        <h2 class="section-title">Organizer Tools</h2>
+
+        <p class="section-description">
+            Choose an action to manage your campus activities.
+        </p>
+
+        <div class="dashboard-grid">
+
+            <div class="card">
+                <div class="card-icon">➕</div>
+                <h3>Add New Event</h3>
+                <p>
+                    Create an event with its title, description, date,
+                    time, venue, and category.
+                </p>
+                <a href="add-event.html" class="card-button">
+                    Create Event
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">📅</div>
+                <h3>Manage Events</h3>
+                <p>
+                    View your events and access event-management options.
+                </p>
+                <a href="manage-events.html" class="card-button purple-button">
+                    Manage Events
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">👥</div>
+                <h3>Student Registrations</h3>
+                <p>
+                    Check the event registration lists and see which
+                    students have signed up.
+                </p>
+                <a href="registrations.html" class="card-button green-button">
+                    View Registrations
+                </a>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">✅</div>
+                <h3>Manage Attendance</h3>
+                <p>
+                    Mark registered students present or absent for
+                    their selected events.
+                </p>
+                <a href="attendance.html" class="card-button orange-button">
+                    Manage Attendance
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CampusConnect. All rights reserved.</p>
+    </footer>
+<script>
+    const organizerName = localStorage.getItem("campusOrganizerName");
+
+    if (organizerName && organizerName.trim() !== "") {
+        document.getElementById("organizerWelcome").textContent =
+            "Welcome, " + organizerName + "!";
+    }
+
+    const logoutLink = document.getElementById("logoutLink");
+
+    if (logoutLink) {
+        logoutLink.addEventListener("click", function () {
+            localStorage.removeItem("campusOrganizerName");
+            localStorage.removeItem("campusOrganizerEmail");
+        });
+    }
+</script>
+</body>
+</html>

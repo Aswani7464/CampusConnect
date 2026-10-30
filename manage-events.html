@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Events | CampusConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        nav {
+            background: #3730a3;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            color: #312e81;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 16px;
+            border: none;
+            border-radius: 7px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .secondary {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .delete {
+            background: #dc2626;
+            color: white;
+        }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .event-card {
+            background: white;
+            padding: 23px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+
+        .event-card h2 {
+            color: #312e81;
+            font-size: 21px;
+        }
+
+        .category {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            align-self: flex-start;
+        }
+
+        .description {
+            color: #64748b;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .details {
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: auto;
+            padding-top: 8px;
+        }
+
+        .notice {
+            display: none;
+            padding: 13px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+        }
+
+        .notice.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .notice.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .empty {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <h2>CampusConnect</h2>
+    <div>
+        <a href="organizer-dashboard.html">Dashboard</a>
+        <a href="index.html">Home</a>
+    </div>
+</nav>
+
+<main class="container">
+    <h1>Manage Events</h1>
+
+    <p class="subtitle">
+        View published campus events, check their details, or remove an event.
+    </p>
+
+    <div class="toolbar">
+        <span id="eventCount">Loading events...</span>
+
+        <div>
+            <button class="button secondary" onclick="loadEvents()">
+                Refresh
+            </button>
+
+            <a class="button primary" href="add-event.html">
+                + Add New Event
+            </a>
+        </div>
+    </div>
+
+    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+    <section id="eventList" class="event-grid"></section>
+</main>
+
+<footer>© 2026 CampusConnect — Campus Event Portal</footer>
+
+<script>
+    const eventList = document.getElementById("eventList");
+    const eventCount = document.getElementById("eventCount");
+    const notice = document.getElementById("notice");
+
+    function showNotice(message, type) {
+        notice.textContent = message;
+        notice.className = "notice " + type;
+    }
+
+    function addTextElement(parent, tag, className, text) {
+        const element = document.createElement(tag);
+
+        if (className) {
+            element.className = className;
+        }
+
+        element.textContent = text ?? "";
+        parent.appendChild(element);
+
+        return element;
+    }
+
+    async function loadEvents() {
+        eventList.replaceChildren();
+        eventCount.textContent = "Loading events...";
+        notice.className = "notice";
+
+        try {
+            const response = await fetch("/events");
+
+            if (!response.ok) {
+                throw new Error("Could not load events.");
+            }
+
+            const events = await response.json();
+
+            eventCount.textContent =
+                events.length +
+                (events.length === 1 ? " event" : " events");
+
+            if (events.length === 0) {
+                addTextElement(
+                    eventList,
+                    "div",
+                    "empty",
+                    "No events found. Click Add New Event to create one."
+                );
+
+                return;
+            }
+
+            events.forEach(event => {
+                const card = document.createElement("article");
+                card.className = "event-card";
+
+                addTextElement(
+                    card, "span", "category", event.category
+                );
+
+                addTextElement(
+                    card, "h2", "", event.title
+                );
+
+                addTextElement(
+                    card, "p", "description", event.description
+                );
+
+                const details = document.createElement("div");
+                details.className = "details";
+
+                addTextElement(
+                    details, "div", "",
+                    "Event ID: " + event.eventId
+                );
+
+                addTextElement(
+                    details, "div", "",
+                    "Date: " + event.date
+                );
+
+                addTextElement(
+                    details, "div", "",
+                    "Time: " + event.time
+                );
+
+                addTextElement(
+                    details, "div", "",
+                    "Venue: " + event.venue
+                );
+
+                addTextElement(
+                    details, "div", "",
+                    "Organizer: " + event.organizerName
+                );
+
+                card.appendChild(details);
+
+                // Only the Delete Event button is shown.
+                const actions = document.createElement("div");
+                actions.className = "card-actions";
+
+                const deleteButton = document.createElement("button");
+                deleteButton.className = "button delete";
+                deleteButton.textContent = "Delete Event";
+
+                deleteButton.addEventListener("click", () => {
+                    deleteEvent(event.eventId, event.title);
+                });
+
+                actions.appendChild(deleteButton);
+                card.appendChild(actions);
+                eventList.appendChild(card);
+            });
+
+        } catch (error) {
+            eventCount.textContent = "Unable to load events";
+
+            showNotice(
+                "Could not load events. Check that the Java server is running.",
+                "error"
+            );
+        }
+    }
+
+    async function deleteEvent(eventId, title) {
+        const confirmed = confirm(
+            'Delete "' + title +
+            '"? Its registrations and attendance records will also be deleted.'
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            const response = await fetch("/delete-event", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    eventId: String(eventId)
+                })
+            });
+
+            const message = await response.text();
+
+            if (!response.ok) {
+                throw new Error(message);
+            }
+
+            showNotice(message, "success");
+
+            await loadEvents();
+
+        } catch (error) {
+            showNotice(
+                error.message || "Could not delete the event.",
+                "error"
+            );
+        }
+    }
+
+    loadEvents();
+</script>
+
+</body>
+</html>

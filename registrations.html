@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registrations | CampusConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        nav {
+            background: #3730a3;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            color: #312e81;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 9px;
+        }
+
+        select {
+            width: 100%;
+            max-width: 550px;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+            background: white;
+        }
+
+        button {
+            border: none;
+            border-radius: 7px;
+            padding: 12px 18px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .secondary {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .summary {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 170px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .summary-card p {
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .summary-card strong {
+            font-size: 27px;
+            color: #312e81;
+        }
+
+        .table-wrapper {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #eef2ff;
+            color: #312e81;
+        }
+
+        .empty {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            color: #64748b;
+            text-align: center;
+        }
+
+        .notice {
+            display: none;
+            padding: 13px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+        }
+
+        .notice.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <h2>CampusConnect</h2>
+    <div>
+        <a href="organizer-dashboard.html">Dashboard</a>
+        <a href="manage-events.html">Manage Events</a>
+        <a href="index.html">Home</a>
+    </div>
+</nav>
+
+<main class="container">
+    <h1>Student Registrations</h1>
+    <p class="subtitle">
+        Select a campus event to view the students registered for it.
+    </p>
+
+    <section class="panel">
+        <label for="eventSelect">Choose Event</label>
+        <select id="eventSelect">
+            <option value="">Loading events...</option>
+        </select>
+
+        <br>
+
+        <button class="primary" id="loadButton" type="button">
+            View Registrations
+        </button>
+        <button class="secondary" id="refreshButton" type="button">
+            Refresh Events
+        </button>
+    </section>
+
+    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+    <section class="summary">
+        <div class="summary-card">
+            <p>Selected Event</p>
+            <strong id="selectedEvent">—</strong>
+        </div>
+        <div class="summary-card">
+            <p>Total Registrations</p>
+            <strong id="registrationCount">—</strong>
+        </div>
+    </section>
+
+    <section id="results">
+        <div class="empty">
+            Select an event and click View Registrations.
+        </div>
+    </section>
+</main>
+
+<footer>© 2026 CampusConnect — Campus Event Portal</footer>
+
+<script>
+    const eventSelect = document.getElementById("eventSelect");
+    const loadButton = document.getElementById("loadButton");
+    const refreshButton = document.getElementById("refreshButton");
+    const results = document.getElementById("results");
+    const notice = document.getElementById("notice");
+
+    let allEvents = [];
+
+    function showError(message) {
+        notice.textContent = message;
+        notice.className = "notice error";
+    }
+
+    function clearNotice() {
+        notice.textContent = "";
+        notice.className = "notice";
+    }
+
+    function addCell(row, text, isHeader) {
+        const cell = document.createElement(isHeader ? "th" : "td");
+        cell.textContent = text;
+        row.appendChild(cell);
+    }
+
+    async function loadEvents() {
+        clearNotice();
+        eventSelect.replaceChildren();
+
+        const loadingOption = document.createElement("option");
+        loadingOption.value = "";
+        loadingOption.textContent = "Loading events...";
+        eventSelect.appendChild(loadingOption);
+
+        try {
+            const response = await fetch("/events");
+            if (!response.ok) throw new Error("Unable to load events.");
+
+            allEvents = await response.json();
+            eventSelect.replaceChildren();
+
+            if (allEvents.length === 0) {
+                const option = document.createElement("option");
+                option.value = "";
+                option.textContent = "No events available";
+                eventSelect.appendChild(option);
+                return;
+            }
+
+            allEvents.forEach(event => {
+                const option = document.createElement("option");
+                option.value = event.eventId;
+                option.textContent =
+                    event.title + " (ID: " + event.eventId + ")";
+                eventSelect.appendChild(option);
+            });
+
+            const params = new URLSearchParams(window.location.search);
+            const requestedId = params.get("eventId");
+
+            if (requestedId &&
+                allEvents.some(event => String(event.eventId) === requestedId)) {
+                eventSelect.value = requestedId;
+                await loadRegistrations();
+            }
+        } catch (error) {
+            eventSelect.replaceChildren();
+            const option = document.createElement("option");
+            option.value = "";
+            option.textContent = "Could not load events";
+            eventSelect.appendChild(option);
+            showError(
+                "Could not load events. Make sure the Java server is running."
+            );
+        }
+    }
+
+    async function loadRegistrations() {
+        clearNotice();
+
+        const eventId = eventSelect.value;
+        const selected = allEvents.find(
+            event => String(event.eventId) === eventId
+        );
+
+        if (!selected) {
+            showError("Please select an event first.");
+            return;
+        }
+
+        document.getElementById("selectedEvent").textContent = selected.title;
+        document.getElementById("registrationCount").textContent = "…";
+        results.replaceChildren();
+
+        const loading = document.createElement("div");
+        loading.className = "empty";
+        loading.textContent = "Loading registrations...";
+        results.appendChild(loading);
+
+        try {
+            const response = await fetch(
+                "/registrations?eventId=" + encodeURIComponent(eventId)
+            );
+
+            const responseText = await response.text();
+
+            if (!response.ok) throw new Error(responseText);
+
+            const registrations = JSON.parse(responseText);
+            document.getElementById("registrationCount").textContent =
+                registrations.length;
+
+            results.replaceChildren();
+
+            if (registrations.length === 0) {
+                const empty = document.createElement("div");
+                empty.className = "empty";
+                empty.textContent =
+                    "No students have registered for this event yet.";
+                results.appendChild(empty);
+                return;
+            }
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "table-wrapper";
+
+            const table = document.createElement("table");
+            const thead = document.createElement("thead");
+            const headerRow = document.createElement("tr");
+
+            [
+                "Registration ID",
+                "Student ID",
+                "Student Name",
+                "Student Email",
+                "Registration Date"
+            ].forEach(text => addCell(headerRow, text, true));
+
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement("tbody");
+
+            registrations.forEach(registration => {
+                const row = document.createElement("tr");
+
+                addCell(row, String(registration.registrationId), false);
+                addCell(row, String(registration.studentId), false);
+                addCell(row, registration.studentName || "Unknown", false);
+                addCell(row, registration.studentEmail || "Not available", false);
+                addCell(row, registration.registrationDate || "—", false);
+
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(tbody);
+            wrapper.appendChild(table);
+            results.appendChild(wrapper);
+
+        } catch (error) {
+            results.replaceChildren();
+            document.getElementById("registrationCount").textContent = "—";
+            showError(
+                error.message || "Could not load student registrations."
+            );
+        }
+    }
+
+    loadButton.addEventListener("click", loadRegistrations);
+    refreshButton.addEventListener("click", loadEvents);
+
+    loadEvents();
+</script>
+
+</body>
+</html>

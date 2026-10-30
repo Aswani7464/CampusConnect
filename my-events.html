@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Registered Events - CampusConnect</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .cancel-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .cancel-button:hover {
+            background: #b91c1c;
+        }
+
+        .cancel-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .notice {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto 25px;
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .notice.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .notice.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .notice.info {
+            display: block;
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">CampusConnect</div>
+
+        <div class="nav-links">
+            <a href="student-dashboard.html">Dashboard</a>
+            <a href="events.html">Events</a>
+            <a href="login.html">Logout</a>
+        </div>
+    </nav>
+
+    <section class="events-section">
+
+        <div class="section-heading">
+            <p class="section-label">MY EVENTS</p>
+            <h1>My Registered Events</h1>
+            <p>Events you have successfully registered for.</p>
+        </div>
+
+        <div id="page-notice" class="notice" role="status"
+             aria-live="polite"></div>
+
+        <div id="registered-events" class="event-container"></div>
+
+    </section>
+
+    <script>
+        function showNotice(message, type) {
+            const notice = document.getElementById("page-notice");
+
+            notice.textContent = message;
+            notice.className = "notice " + type;
+
+            notice.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+        }
+
+        function loadRegisteredEvents() {
+            const container = document.getElementById("registered-events");
+
+          fetch("/my-events?studentId=" + encodeURIComponent(localStorage.getItem("campusStudentId") || ""))
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error("Could not load registered events.");
+                    }
+                    return response.json();
+                })
+                .then(function(events) {
+                    container.innerHTML = "";
+
+                    if (!Array.isArray(events) || events.length === 0) {
+                        container.innerHTML = `
+                            <div class="event-card">
+                                <h2>No Registered Events</h2>
+                                <p>You have not registered for any events yet.</p>
+                                <a href="events.html" class="card-button">
+                                    Browse Events
+                                </a>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    events.forEach(function(event) {
+                        const card = document.createElement("div");
+                        card.className = "event-card";
+
+                        const category = document.createElement("div");
+                        category.className = "event-category";
+                        category.textContent = event.category || "Event";
+
+                        const title = document.createElement("h3");
+                        title.textContent = event.eventName || "Untitled Event";
+
+                        const details = document.createElement("div");
+                        details.className = "event-details";
+
+                        [
+                            "📅 " + (event.date || "Date not available"),
+                            "🕐 " + (event.time || "Time not available"),
+                            "📍 " + (event.venue || "Venue not available")
+                        ].forEach(function(value) {
+                            const span = document.createElement("span");
+                            span.textContent = value;
+                            details.appendChild(span);
+                        });
+
+                        const organizer = document.createElement("p");
+                        organizer.textContent =
+                            "Organizer: " + (event.organizer || "Not specified");
+
+                        const registrationDate = document.createElement("p");
+                        registrationDate.textContent =
+                            "Registration Date: " +
+                            (event.registrationDate || "Not available");
+
+                        const cancelButton = document.createElement("button");
+                        cancelButton.className = "cancel-button";
+                        cancelButton.textContent = "Cancel Registration";
+
+                        cancelButton.addEventListener("click", function() {
+                            cancelRegistration(
+                                event.eventId,
+                                event.eventName,
+                                cancelButton
+                            );
+                        });
+
+                        card.appendChild(category);
+                        card.appendChild(title);
+                        card.appendChild(details);
+                        card.appendChild(organizer);
+                        card.appendChild(registrationDate);
+                        card.appendChild(cancelButton);
+
+                        container.appendChild(card);
+                    });
+                })
+                .catch(function(error) {
+                    console.error(error);
+                    container.innerHTML = `
+                        <div class="event-card">
+                            <h2>Unable to Load Events</h2>
+                            <p>Please make sure the CampusConnect server is running.</p>
+                        </div>
+                    `;
+                    showNotice(
+                        "Could not load your events. Please try again.",
+                        "error"
+                    );
+                });
+        }
+
+        function cancelRegistration(eventId, eventName, button) {
+            const confirmed = confirm(
+                "Are you sure you want to cancel your registration for " +
+                eventName + "?"
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = "Cancelling...";
+
+            fetch("/cancel-registration", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "studentId=1&eventId=" +
+                    encodeURIComponent(eventId)
+            })
+            .then(function(response) {
+                return response.text().then(function(message) {
+                    return {
+                        ok: response.ok,
+                        message: message
+                    };
+                });
+            })
+            .then(function(result) {
+                if (result.ok) {
+                    showNotice(
+                        result.message || "Registration cancelled successfully.",
+                        "success"
+                    );
+                    loadRegisteredEvents();
+                } else {
+                    showNotice(
+                        result.message || "Could not cancel registration.",
+                        "error"
+                    );
+                    button.disabled = false;
+                    button.textContent = "Cancel Registration";
+                }
+            })
+            .catch(function(error) {
+                console.error(error);
+                showNotice(
+                    "Unable to cancel registration. Please try again.",
+                    "error"
+                );
+                button.disabled = false;
+                button.textContent = "Cancel Registration";
+            });
+        }
+
+        loadRegisteredEvents();
+    </script>
+
+</body>
+</html>

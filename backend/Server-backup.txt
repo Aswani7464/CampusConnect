@@ -1,0 +1,491 @@
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
+
+import model.Attendance;
+import model.Registration;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Server {
+
+    private static final List<Registration> registrations =
+            new ArrayList<>();
+
+    private static final List<Attendance> attendanceRecords =
+            new ArrayList<>();
+
+    private static int nextRegistrationId = 1001;
+    private static int nextAttendanceId = 1;
+
+    public static void main(String[] args) throws Exception {
+        HttpServer server = HttpServer.create(
+                new InetSocketAddress(8080), 0);
+
+        server.createContext("/", Server::handleRequest);
+        server.setExecutor(null);
+
+        System.out.println("CampusConnect Server Started!");
+        System.out.println("Open: http://localhost:8080");
+
+        server.start();
+    }
+
+    private static void handleRequest(HttpExchange exchange)
+            throws IOException {
+
+        String path = exchange.getRequestURI().getPath();
+        String method = exchange.getRequestMethod();
+
+        System.out.println(method + " " + path);
+
+        if (path.equals("/login") && method.equalsIgnoreCase("POST")) {
+            handleLogin(exchange);
+            return;
+        }
+
+        if (path.equals("/register") && method.equalsIgnoreCase("POST")) {
+            handleRegistration(exchange);
+            return;
+        }
+
+        if (path.equals("/cancel-registration")
+                && method.equalsIgnoreCase("POST")) {
+            handleCancelRegistration(exchange);
+            return;
+        }
+
+        if (path.equals("/my-events") && method.equalsIgnoreCase("GET")) {
+            handleMyEvents(exchange);
+            return;
+        }
+
+        if (path.equals("/mark-attendance")
+                && method.equalsIgnoreCase("POST")) {
+            handleMarkAttendance(exchange);
+            return;
+        }
+
+        if (path.equals("/event-attendance")
+                && method.equalsIgnoreCase("GET")) {
+            handleEventAttendance(exchange);
+            return;
+        }
+
+        Path file;
+
+        switch (path) {
+            case "/":
+            case "/index.html":
+                file = Path.of("../index.html");
+                break;
+            case "/login.html":
+                file = Path.of("../login.html");
+                break;
+            case "/student-dashboard.html":
+                file = Path.of("../student-dashboard.html");
+                break;
+           case "/student-details.html":
+                file = Path.of("../student-details.html");
+                break;     
+            case "/organizer-dashboard.html":
+                file = Path.of("../organizer-dashboard.html");
+                break;
+            case "/events.html":
+                file = Path.of("../events.html");
+                break;
+            case "/my-events.html":
+                file = Path.of("../my-events.html");
+                break;
+            case "/attendance.html":
+                file = Path.of("../attendance.html");
+                break;
+            case "/style.css":
+                file = Path.of("../style.css");
+                break;
+            case "/script.js":
+                file = Path.of("../script.js");
+                break;
+            default:
+                sendResponse(exchange, 404, "Page not found.");
+                return;
+        }
+
+        if (!Files.exists(file)) {
+            sendResponse(exchange, 404, "File not found: " + file);
+            return;
+        }
+
+        byte[] content = Files.readAllBytes(file);
+
+        String contentType = "text/plain; charset=UTF-8";
+
+        if (path.endsWith(".html") || path.equals("/")) {
+            contentType = "text/html; charset=UTF-8";
+        } else if (path.endsWith(".css")) {
+            contentType = "text/css; charset=UTF-8";
+        } else if (path.endsWith(".js")) {
+            contentType = "application/javascript; charset=UTF-8";
+        }
+
+        exchange.getResponseHeaders().set("Content-Type", contentType);
+        exchange.sendResponseHeaders(200, content.length);
+
+        try (OutputStream out = exchange.getResponseBody()) {
+            out.write(content);
+        }
+    }
+
+    private static void handleLogin(HttpExchange exchange)
+            throws IOException {
+
+        String body = readBody(exchange);
+        String email = getFormValue(body, "email");
+        String password = getFormValue(body, "password");
+
+        if ((email.equals("rahul@college.edu")
+                && password.equals("student123"))
+                || (email.equals("priya@college.edu")
+                && password.equals("organizer123"))
+                || (email.equals("admin@college.edu")
+                && password.equals("admin123"))) {
+
+            sendResponse(exchange, 200, "Login successful.");
+        } else {
+            sendResponse(exchange, 401, "Invalid email or password.");
+        }
+    }
+
+    private static void handleRegistration(HttpExchange exchange)
+            throws IOException {
+
+        String body = readBody(exchange);
+        int studentId;
+        String studentText = getFormValue(body, "studentId");
+        String eventName = getFormValue(body, "eventName");
+
+        try {
+            studentId = Integer.parseInt(studentText);
+        } catch (NumberFormatException e) {
+            sendResponse(exchange, 400, "Invalid student ID.");
+            return;
+        }
+
+        int eventId = getEventId(eventName);
+
+        if (eventId == -1) {
+            sendResponse(exchange, 400, "Event not found.");
+            return;
+        }
+
+        for (Registration r : registrations) {
+            if (r.getStudentId() == studentId
+                    && r.getEventId() == eventId) {
+                sendResponse(exchange, 409,
+                        "You are already registered for " + eventName + ".");
+                return;
+            }
+        }
+
+        registrations.add(new Registration(
+                nextRegistrationId++, studentId, eventId,
+                LocalDate.now().toString()));
+
+        sendResponse(exchange, 200,
+                "Registration successful for " + eventName + ".");
+    }
+
+    private static void handleCancelRegistration(HttpExchange exchange)
+            throws IOException {
+
+        String body = readBody(exchange);
+        int studentId;
+        int eventId;
+
+        try {
+            studentId = Integer.parseInt(getFormValue(body, "studentId"));
+            eventId = Integer.parseInt(getFormValue(body, "eventId"));
+        } catch (NumberFormatException e) {
+            sendResponse(exchange, 400, "Invalid student or event ID.");
+            return;
+        }
+
+        Registration found = null;
+
+        for (Registration r : registrations) {
+            if (r.getStudentId() == studentId
+                    && r.getEventId() == eventId) {
+                found = r;
+                break;
+            }
+        }
+
+        if (found == null) {
+            sendResponse(exchange, 404, "Registration not found.");
+            return;
+        }
+
+        registrations.remove(found);
+        sendResponse(exchange, 200,
+                "Registration cancelled for " + getEventName(eventId) + ".");
+    }
+
+    private static void handleMyEvents(HttpExchange exchange)
+            throws IOException {
+
+        String query = exchange.getRequestURI().getQuery();
+        int studentId = 1;
+
+        if (query != null && query.contains("studentId=")) {
+            try {
+                studentId = Integer.parseInt(
+                        query.substring(query.indexOf("studentId=") + 10)
+                                .split("&")[0]);
+            } catch (NumberFormatException ignored) {
+                studentId = 1;
+            }
+        }
+
+        StringBuilder json = new StringBuilder("[");
+        boolean first = true;
+
+        for (Registration r : registrations) {
+            if (r.getStudentId() != studentId) {
+                continue;
+            }
+
+            if (!first) {
+                json.append(",");
+            }
+            first = false;
+
+            int id = r.getEventId();
+            json.append("{")
+                .append("\"eventId\":").append(id).append(",")
+                .append("\"eventName\":\"").append(getEventName(id)).append("\",")
+                .append("\"date\":\"").append(getEventDate(id)).append("\",")
+                .append("\"time\":\"").append(getEventTime(id)).append("\",")
+                .append("\"venue\":\"").append(getEventVenue(id)).append("\",")
+                .append("\"category\":\"").append(getEventCategory(id)).append("\",")
+                .append("\"organizer\":\"").append(getEventOrganizer(id)).append("\",")
+                .append("\"registrationDate\":\"")
+                .append(r.getRegistrationDate()).append("\"}");
+        }
+
+        json.append("]");
+        sendJsonResponse(exchange, 200, json.toString());
+    }
+
+    private static void handleMarkAttendance(HttpExchange exchange)
+            throws IOException {
+
+        String body = readBody(exchange);
+        int studentId;
+        int eventId;
+        String status = getFormValue(body, "status");
+
+        try {
+            studentId = Integer.parseInt(getFormValue(body, "studentId"));
+            eventId = Integer.parseInt(getFormValue(body, "eventId"));
+        } catch (NumberFormatException e) {
+            sendResponse(exchange, 400, "Invalid student or event ID.");
+            return;
+        }
+
+        if (!status.equals("Present") && !status.equals("Absent")) {
+            sendResponse(exchange, 400, "Status must be Present or Absent.");
+            return;
+        }
+
+        boolean registered = false;
+
+        for (Registration r : registrations) {
+            if (r.getStudentId() == studentId
+                    && r.getEventId() == eventId) {
+                registered = true;
+                break;
+            }
+        }
+
+        if (!registered) {
+            sendResponse(exchange, 404,
+                    "Student is not registered for this event.");
+            return;
+        }
+
+        Attendance existing = null;
+
+        for (Attendance a : attendanceRecords) {
+            if (a.getStudentId() == studentId
+                    && a.getEventId() == eventId) {
+                existing = a;
+                break;
+            }
+        }
+
+        if (existing != null) {
+            existing.setStatus(status);
+        } else {
+            attendanceRecords.add(new Attendance(
+                    nextAttendanceId++, studentId, eventId,
+                    status, LocalDate.now().toString()));
+        }
+
+        sendResponse(exchange, 200,
+                "Attendance saved: " + status + ".");
+    }
+
+    private static void handleEventAttendance(HttpExchange exchange)
+            throws IOException {
+
+        String query = exchange.getRequestURI().getQuery();
+        int eventId;
+
+        try {
+            if (query == null || !query.contains("eventId=")) {
+                throw new NumberFormatException();
+            }
+            eventId = Integer.parseInt(
+                    query.substring(query.indexOf("eventId=") + 8)
+                            .split("&")[0]);
+        } catch (NumberFormatException e) {
+            sendResponse(exchange, 400, "Please provide a valid eventId.");
+            return;
+        }
+
+        StringBuilder json = new StringBuilder("[");
+        boolean first = true;
+
+        for (Registration r : registrations) {
+            if (r.getEventId() != eventId) {
+                continue;
+            }
+
+            String status = "Not Marked";
+
+            for (Attendance a : attendanceRecords) {
+                if (a.getStudentId() == r.getStudentId()
+                        && a.getEventId() == eventId) {
+                    status = a.getStatus();
+                    break;
+                }
+            }
+
+            if (!first) {
+                json.append(",");
+            }
+            first = false;
+
+            json.append("{")
+                .append("\"studentId\":").append(r.getStudentId()).append(",")
+                .append("\"eventId\":").append(eventId).append(",")
+                .append("\"eventName\":\"").append(getEventName(eventId)).append("\",")
+                .append("\"status\":\"").append(status).append("\"}");
+        }
+
+        json.append("]");
+        sendJsonResponse(exchange, 200, json.toString());
+    }
+
+    private static int getEventId(String name) {
+        if ("Tech Fest 2026".equals(name)) return 101;
+        if ("Campus Cultural Fest".equals(name)) return 102;
+        if ("Web Development Workshop".equals(name)) return 103;
+        return -1;
+    }
+
+    private static String getEventName(int id) {
+        if (id == 101) return "Tech Fest 2026";
+        if (id == 102) return "Campus Cultural Fest";
+        if (id == 103) return "Web Development Workshop";
+        return "Unknown Event";
+    }
+
+    private static String getEventDate(int id) {
+        if (id == 101) return "October 15, 2026";
+        if (id == 102) return "November 5, 2026";
+        if (id == 103) return "November 20, 2026";
+        return "";
+    }
+
+    private static String getEventTime(int id) {
+        if (id == 101) return "10:00 AM";
+        if (id == 102) return "11:00 AM";
+        if (id == 103) return "2:00 PM";
+        return "";
+    }
+
+    private static String getEventVenue(int id) {
+        if (id == 101) return "Main Auditorium";
+        if (id == 102) return "College Ground";
+        if (id == 103) return "Computer Lab";
+        return "";
+    }
+
+    private static String getEventCategory(int id) {
+        if (id == 101) return "Technical";
+        if (id == 102) return "Cultural";
+        if (id == 103) return "Workshop";
+        return "";
+    }
+
+    private static String getEventOrganizer(int id) {
+        if (id == 101) return "Priya Sharma";
+        if (id == 102) return "Cultural Club";
+        if (id == 103) return "Computer Science Club";
+        return "";
+    }
+
+    private static String readBody(HttpExchange exchange)
+            throws IOException {
+        return new String(exchange.getRequestBody().readAllBytes(),
+                StandardCharsets.UTF_8);
+    }
+
+    private static String getFormValue(String body, String key) {
+        for (String parameter : body.split("&")) {
+            String[] parts = parameter.split("=", 2);
+
+            if (parts.length == 2 && parts[0].equals(key)) {
+                return URLDecoder.decode(
+                        parts[1], StandardCharsets.UTF_8);
+            }
+        }
+        return "";
+    }
+
+    private static void sendResponse(HttpExchange exchange,
+            int statusCode, String message) throws IOException {
+
+        byte[] response = message.getBytes(StandardCharsets.UTF_8);
+        exchange.getResponseHeaders().set(
+                "Content-Type", "text/plain; charset=UTF-8");
+        exchange.sendResponseHeaders(statusCode, response.length);
+
+        try (OutputStream out = exchange.getResponseBody()) {
+            out.write(response);
+        }
+    }
+
+    private static void sendJsonResponse(HttpExchange exchange,
+            int statusCode, String json) throws IOException {
+
+        byte[] response = json.getBytes(StandardCharsets.UTF_8);
+        exchange.getResponseHeaders().set(
+                "Content-Type", "application/json; charset=UTF-8");
+        exchange.sendResponseHeaders(statusCode, response.length);
+
+        try (OutputStream out = exchange.getResponseBody()) {
+            out.write(response);
+        }
+    }
+}

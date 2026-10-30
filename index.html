@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect - Campus Event Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">CampusConnect</div>
+
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="#events" class="btn btn-primary">Explore Events</a></li>
+                <li><a href="#about" class="btn btn-secondary">Learn More</a></li>
+            </ul>
+
+            <a href="/login.html" class="login-button">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <p class="welcome-text">Welcome to CampusConnect</p>
+
+                <h1>Discover. Connect. Participate.</h1>
+
+                <p class="hero-description">
+                    Discover exciting events happening on your campus,
+                    register for events, and never miss an opportunity
+                    to connect with your college community.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#events" class="primary-button">Explore Events</a>
+                    <a href="#about" class="secondary-button">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="events" class="events-section">
+            <div class="section-heading">
+                <p class="section-label">CAMPUS EVENTS</p>
+                <h2>Upcoming Events</h2>
+
+                <p>
+                    Find events, workshops, competitions and activities
+                    happening around your campus.
+                </p>
+            </div>
+
+            <!-- Events will be loaded from the Java server -->
+            <div class="event-container" id="homeEvents">
+                <p>Loading upcoming events...</p>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <div class="section-heading">
+                <p class="section-label">ABOUT CAMPUSCONNECT</p>
+                <h2>Your Campus. Your Events.</h2>
+
+                <p>
+                    CampusConnect is a campus event portal designed to
+                    help students discover, register for and manage
+                    college events in one place.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 CampusConnect. Campus Event Portal.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

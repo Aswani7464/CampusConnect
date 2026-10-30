@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Event | CampusConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        nav {
+            background: #3730a3;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            color: #312e81;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        form {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+            background: white;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: 2px solid #a5b4fc;
+            border-color: #4f46e5;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 7px;
+            background: #4f46e5;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .secondary {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .notice {
+            display: none;
+            padding: 13px;
+            border-radius: 7px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .notice.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .notice.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+        }
+
+        @media (max-width: 500px) {
+            form {
+                padding: 20px;
+            }
+
+            nav a {
+                margin-left: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <h2>CampusConnect</h2>
+    <div>
+        <a href="organizer-dashboard.html">Dashboard</a>
+        <a href="manage-events.html">Manage Events</a>
+        <a href="index.html">Home</a>
+    </div>
+</nav>
+
+<main class="container">
+    <h1>Publish a New Event</h1>
+
+    <p class="subtitle">
+        Enter the event details below and publish it to CampusConnect.
+    </p>
+
+    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+
+    <form id="eventForm">
+        <div class="form-group">
+            <label for="title">Event Title *</label>
+            <input
+                type="text"
+                id="title"
+                name="title"
+                placeholder="Example: Coding Competition"
+                required
+                maxlength="150"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="description">Event Description *</label>
+            <textarea
+                id="description"
+                name="description"
+                placeholder="Describe your event..."
+                required
+                maxlength="2000"
+            ></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="date">Event Date *</label>
+            <input type="date" id="date" name="date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="time">Event Time *</label>
+            <input
+                type="text"
+                id="time"
+                name="time"
+                placeholder="Example: 10:00 AM"
+                required
+                maxlength="50"
+            >
+        </div>
+
+       <div class="form-group">
+    <label for="venue">Venue *</label>
+    <input
+        type="text"
+        id="venue"
+        name="venue"
+        placeholder="Example: Main Auditorium"
+        required
+        maxlength="200"
+    >
+</div>
+
+<div class="form-group">
+    <label for="studentLimit">Maximum Number of Students *</label>
+    <input
+        type="number"
+        id="studentLimit"
+        name="studentLimit"
+        placeholder="Example: 100"
+        min="1"
+        max="100000"
+        step="1"
+        required
+    >
+</div>
+<div class="form-group">
+    <label for="eventFee">Event Fee (₹) *</label>
+    <input
+        type="number"
+        id="eventFee"
+        name="eventFee"
+        placeholder="Enter 0 for a free event"
+        min="0"
+        max="100000"
+        step="1"
+        value="0"
+        required
+    >
+    <small>
+        Enter 0 for free events, or the fee each student must pay.
+    </small>
+</div>
+
+        <div class="form-group">
+            <label for="category">Event Category *</label>
+            <select id="category" name="category" required>
+                <option value="">Select a category</option>
+                <option value="Technical">Technical</option>
+                <option value="Cultural">Cultural</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Sports">Sports</option>
+                <option value="Seminar">Seminar</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="organizerName">Organizer Name *</label>
+            <input
+                type="text"
+                id="organizerName"
+                name="organizerName"
+                placeholder="Example: Computer Science Club"
+                required
+                maxlength="150"
+            >
+        </div>
+
+        <div class="actions">
+            <button type="submit" id="publishButton" class="button">
+                Publish Event
+            </button>
+
+            <a href="organizer-dashboard.html" class="button secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
+</main>
+
+<footer>© 2026 CampusConnect — Campus Event Portal</footer>
+
+<script>
+    const eventForm = document.getElementById("eventForm");
+    const notice = document.getElementById("notice");
+    const publishButton = document.getElementById("publishButton");
+    const dateInput = document.getElementById("date");
+
+    // Prevent selecting a date in the past.
+    const today = new Date();
+    const localToday = [
+        today.getFullYear(),
+        String(today.getMonth() + 1).padStart(2, "0"),
+        String(today.getDate()).padStart(2, "0")
+    ].join("-");
+
+    dateInput.min = localToday;
+
+    function showNotice(message, type) {
+        notice.textContent = message;
+        notice.className = "notice " + type;
+    }
+
+    eventForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        publishButton.disabled = true;
+        publishButton.textContent = "Publishing...";
+        notice.className = "notice";
+
+        try {
+            const formData = new FormData(eventForm);
+            const body = new URLSearchParams();
+
+            for (const [key, value] of formData.entries()) {
+                body.append(key, value.toString().trim());
+            }
+
+            const response = await fetch("/create-event", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: body
+            });
+
+            const message = await response.text();
+
+            if (!response.ok) {
+                throw new Error(message || "Could not publish the event.");
+            }
+
+            eventForm.reset();
+            showNotice(
+                "Event published successfully! You can view it on the Manage Events page.",
+                "success"
+            );
+
+        } catch (error) {
+            showNotice(
+                error.message || "Could not connect to the server. Please try again.",
+                "error"
+            );
+        } finally {
+            publishButton.disabled = false;
+            publishButton.textContent = "Publish Event";
+        }
+    });
+</script>
+
+</body>
+</html>

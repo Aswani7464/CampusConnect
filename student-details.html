@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile - CampusConnect</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; background: #f1f5f9; color: #1e293b; }
+        nav { background: #2563eb; color: white; padding: 18px 6%; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        nav a { color: white; text-decoration: none; margin-left: 15px; }
+        main { max-width: 850px; margin: 35px auto; padding: 0 20px; }
+        .navigation { display: flex; gap: 10px; margin-bottom: 20px; }
+        .navigation a, .navigation button { border: 0; padding: 11px 16px; border-radius: 7px; cursor: pointer; text-decoration: none; color: white; background: #64748b; font-size: 14px; }
+        .navigation a { background: #2563eb; }
+        .profile { background: white; border-radius: 14px; padding: 30px; box-shadow: 0 4px 20px #0000000c; }
+        .avatar { width: 80px; height: 80px; border-radius: 50%; display: grid; place-items: center; background: #dbeafe; color: #1d4ed8; font-size: 30px; font-weight: bold; margin-bottom: 18px; }
+        h1 { margin-bottom: 6px; }
+        .subtitle { color: #64748b; margin-top: 0; }
+        .details { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-top: 28px; }
+        .detail { background: #f8fafc; border: 1px solid #e2e8f0; padding: 18px; border-radius: 9px; }
+        .detail span { display: block; color: #64748b; font-size: 13px; margin-bottom: 8px; }
+        .detail strong { overflow-wrap: anywhere; }
+        .actions { margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; }
+        .actions a { padding: 12px 16px; border-radius: 7px; background: #2563eb; color: white; text-decoration: none; }
+        footer { margin-top: 45px; background: #1e293b; color: white; text-align: center; padding: 22px; }
+    </style>
+</head>
+<body>
+<nav>
+    <strong>CampusConnect</strong>
+    <div>
+        <a href="student-dashboard.html">Dashboard</a>
+        <a href="events.html">Events</a>
+        <a href="login.html">Logout</a>
+    </div>
+</nav>
+
+<main>
+    <div class="navigation">
+        <button onclick="history.back()">← Back</button>
+        <a href="index.html">⌂ Home</a>
+    </div>
+
+    <section class="profile">
+       
+<div class="avatar" id="profileAvatar">RK</div>
+<h1 id="profileName">Student Name</h1>
+<p class="subtitle">Student Profile</p>
+
+<div class="details">
+    <div class="detail">
+        <span>Student ID</span>
+        <strong id="profileId">-</strong>
+    </div>
+    <div class="detail">
+        <span>Full Name</span>
+        <strong id="profileFullName">Student Name</strong>
+    </div>
+    <div class="detail">
+        <span>Email Address</span>
+        <strong id="profileEmail">-</strong>
+    </div>
+    <div class="detail">
+        <span>Department</span>
+        <strong id="profileDepartment">-</strong>
+    </div>
+    <div class="detail">
+        <span>Role</span>
+        <strong>Student</strong>
+    </div>
+    <div class="detail">
+        <span>Portal</span>
+        <strong>CampusConnect</strong>
+    </div>
+</div>
+
+<div class="actions">
+    <a href="events.html">Explore Events</a>
+    <a href="my-events.html">My Registrations</a>
+</div>
+</section>
+</main>
+
+
+<footer>© 2026 CampusConnect. All rights reserved.</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const name = localStorage.getItem("campusStudentName") || "Rahul Kumar";
+    const email = localStorage.getItem("campusStudentEmail") || "rahul@college.edu";
+    const studentId = localStorage.getItem("campusStudentId") || "1";
+
+    document.getElementById("profileName").textContent = name;
+    document.getElementById("profileFullName").textContent = name;
+    document.getElementById("profileEmail").textContent = email;
+    document.getElementById("profileId").textContent = studentId;
+
+    const initials = name.trim().split(/\s+/)
+        .map(part => part.charAt(0))
+        .join("")
+        .substring(0, 2)
+        .toUpperCase();
+
+    document.getElementById("profileAvatar").textContent = initials;
+});
+</script>
+
+</body>
+</html>
