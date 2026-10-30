@@ -6,7 +6,9 @@
     <title>Campus Events - CampusConnect</title>
 
     <style>
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -61,9 +63,13 @@
             font-size: 14px;
         }
 
-        .navigation a { background: #2563eb; }
+        .navigation a {
+            background: #2563eb;
+        }
 
-        h1 { margin-bottom: 8px; }
+        h1 {
+            margin-bottom: 8px;
+        }
 
         .intro {
             color: #64748b;
@@ -101,12 +107,6 @@
             font-size: 15px;
             background: white;
             color: #1e293b;
-        }
-
-        .field input:focus,
-        .field select:focus {
-            outline: 2px solid #93c5fd;
-            border-color: #2563eb;
         }
 
         .search-bottom {
@@ -192,7 +192,9 @@
             margin-top: auto;
         }
 
-        .register:hover { background: #1d4ed8; }
+        .register:hover {
+            background: #1d4ed8;
+        }
 
         .register:disabled {
             opacity: 0.6;
@@ -210,6 +212,102 @@
             line-height: 1.6;
         }
 
+        /* Registration modal */
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.65);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: 0 10px 35px #00000030;
+            margin: auto;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            color: #1d4ed8;
+        }
+
+        .modal-content p {
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-field {
+            margin-bottom: 14px;
+        }
+
+        .form-field.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        .form-field input,
+        .form-field select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .submit-btn,
+        .cancel-btn {
+            flex: 1;
+            padding: 13px;
+            border: 0;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .submit-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         footer {
             margin-top: 45px;
             background: #1e293b;
@@ -219,13 +317,18 @@
         }
 
         @media (max-width: 650px) {
-            .search-controls {
+            .search-controls,
+            .form-grid {
                 grid-template-columns: 1fr;
             }
 
             nav {
                 align-items: flex-start;
                 flex-direction: column;
+            }
+
+            .form-field.full {
+                grid-column: auto;
             }
         }
     </style>
@@ -235,6 +338,7 @@
 
 <nav>
     <div class="logo">CampusConnect</div>
+
     <div>
         <a href="index.html">Home</a>
         <a href="student-dashboard.html">Dashboard</a>
@@ -244,6 +348,7 @@
 </nav>
 
 <main>
+
     <div class="navigation">
         <button onclick="history.back()">← Back</button>
         <a href="index.html">⌂ Home</a>
@@ -256,7 +361,9 @@
     </p>
 
     <section class="search-panel">
+
         <div class="search-controls">
+
             <div class="field">
                 <label for="searchInput">Search Events</label>
                 <input
@@ -273,17 +380,14 @@
                     <option value="">All Categories</option>
                 </select>
             </div>
+
         </div>
 
         <div class="search-bottom">
-            <span id="resultCount" aria-live="polite">
-                Loading events...
-            </span>
-
-            <button type="button" id="clearFilters">
-                Clear Search
-            </button>
+            <span id="resultCount">Loading events...</span>
+            <button type="button" id="clearFilters">Clear Search</button>
         </div>
+
     </section>
 
     <div id="notification" role="status" aria-live="polite"></div>
@@ -291,9 +395,114 @@
     <section id="eventsList" class="events">
         <div class="loading">Loading campus events...</div>
     </section>
+
 </main>
 
-<footer>© 2026 CampusConnect. All rights reserved.</footer>
+<!-- Student Registration Form -->
+
+<div class="modal" id="registrationModal">
+
+    <div class="modal-content">
+
+        <h2>Student Event Registration</h2>
+
+        <p id="selectedEventName"></p>
+
+        <form id="registrationForm">
+
+            <div class="form-grid">
+
+                <div class="form-field">
+                    <label for="fullName">Full Name *</label>
+                    <input
+                        type="text"
+                        id="fullName"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="registerNumber">Register Number *</label>
+                    <input
+                        type="text"
+                        id="registerNumber"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="studentEmail">Email Address *</label>
+                    <input
+                        type="email"
+                        id="studentEmail"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="phoneNumber">Phone Number *</label>
+                    <input
+                        type="tel"
+                        id="phoneNumber"
+                        pattern="[0-9]{10}"
+                        maxlength="10"
+                        placeholder="10-digit mobile number"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="department">Department *</label>
+                    <select id="department" required>
+                        <option value="">Select Department</option>
+                        <option value="CSE">Computer Science and Engineering</option>
+                        <option value="IT">Information Technology</option>
+                        <option value="ECE">Electronics and Communication</option>
+                        <option value="EEE">Electrical and Electronics</option>
+                        <option value="MECH">Mechanical Engineering</option>
+                        <option value="CIVIL">Civil Engineering</option>
+                        <option value="OTHER">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label for="studyYear">Year of Study *</label>
+                    <select id="studyYear" required>
+                        <option value="">Select Year</option>
+                        <option value="1">First Year</option>
+                        <option value="2">Second Year</option>
+                        <option value="3">Third Year</option>
+                        <option value="4">Fourth Year</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="form-buttons">
+
+                <button type="button"
+                        class="cancel-btn"
+                        id="cancelRegistration">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="submit-btn"
+                        id="submitRegistration">
+                    Submit Registration
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<footer>
+    © 2026 CampusConnect. All rights reserved.
+</footer>
 
 <script>
     const eventsList = document.getElementById("eventsList");
@@ -302,7 +511,18 @@
     const resultCount = document.getElementById("resultCount");
     const clearFilters = document.getElementById("clearFilters");
 
+    const registrationModal =
+        document.getElementById("registrationModal");
+
+    const registrationForm =
+        document.getElementById("registrationForm");
+
+    const submitRegistration =
+        document.getElementById("submitRegistration");
+
     let allEvents = [];
+    let selectedEvent = null;
+    let selectedButton = null;
 
     function showNotification(message, success) {
         const box = document.getElementById("notification");
@@ -391,12 +611,8 @@
                 event.category
             ].join(" ").toLowerCase();
 
-            const matchesSearch = searchableText.includes(searchTerm);
-
-            const matchesCategory = !selectedCategory ||
-                event.category === selectedCategory;
-
-            return matchesSearch && matchesCategory;
+            return searchableText.includes(searchTerm) &&
+                (!selectedCategory || event.category === selectedCategory);
         });
 
         resultCount.textContent =
@@ -410,97 +626,79 @@
                 eventsList,
                 "div",
                 "empty",
-                allEvents.length === 0
-                    ? "No events have been published yet. Please check back later."
-                    : "No matching events found. Try another search or clear your filters."
+                "No matching events found. Try another search or clear your filters."
             );
             return;
         }
 
-        
-filteredEvents.forEach(event => {
-    const card = document.createElement("article");
-    card.className = "card";
+        filteredEvents.forEach(event => {
+            const card = document.createElement("article");
+            card.className = "card";
 
-    addTextElement(card, "span", "category", event.category);
-    addTextElement(card, "h2", "", event.title);
-    addTextElement(card, "p", "", event.description);
+            addTextElement(card, "span", "category", event.category);
+            addTextElement(card, "h2", "", event.title);
+            addTextElement(card, "p", "", event.description);
 
-    addTextElement(
-        card, "p", "", "Date: " + formatDate(event.date)
-    );
-    addTextElement(
-        card, "p", "", "Time: " + (event.time || "Not specified")
-    );
-    addTextElement(
-        card, "p", "", "Venue: " + (event.venue || "Not specified")
-    );
-    addTextElement(
-        card, "p", "", "Organizer: " +
-            (event.organizerName || "Not specified")
-    );
+            addTextElement(card, "p", "", "Date: " + formatDate(event.date));
+            addTextElement(card, "p", "", "Time: " + (event.time || "Not specified"));
+            addTextElement(card, "p", "", "Venue: " + (event.venue || "Not specified"));
+            addTextElement(card, "p", "", "Organizer: " + (event.organizerName || "Not specified"));
 
-    // Seat availability details
-    const studentLimit = Number(event.studentLimit ?? 100000);
-    const registeredCount = Number(event.registeredCount ?? 0);
-    const availableSeats = Math.max(
-        0,
-        Number(event.availableSeats ?? studentLimit - registeredCount)
-    );
-    const eventFee = Number(event.eventFee ?? 0);
-
-    addTextElement(
-        card, "p", "", "Maximum Seats: " + studentLimit
-    );
-    addTextElement(
-        card, "p", "", "Registered Students: " + registeredCount
-    );
-
-    const seatsText = availableSeats === 0
-        ? "Fully Booked"
-        : "Seats Available: " + availableSeats;
-
-    const seatsElement = document.createElement("p");
-    seatsElement.textContent = seatsText;
-    seatsElement.style.fontWeight = "bold";
-    seatsElement.style.color = availableSeats === 0
-        ? "#dc2626"
-        : "#15803d";
-    card.appendChild(seatsElement);
-    const feeElement = document.createElement("p");
-
-feeElement.textContent = eventFee === 0
-    ? "Event Fee: FREE"
-    : "Event Fee: ₹" + eventFee;
-
-feeElement.style.fontWeight = "bold";
-feeElement.style.color = "#2563eb";
-
-card.appendChild(feeElement);
-
-    const registerButton = document.createElement("button");
-    registerButton.dataset.eventFee = String(eventFee);
-    registerButton.className = "register";
-
-    if (availableSeats === 0) {
-        registerButton.textContent = "Fully Booked";
-        registerButton.disabled = true;
-    } else {
-        registerButton.textContent = "Register Now";
-
-        registerButton.addEventListener("click", () => {
-            registerEvent(
-                event.eventId,
-                event.title,
-                registerButton
+            const studentLimit = Number(event.studentLimit ?? 100000);
+            const registeredCount = Number(event.registeredCount ?? 0);
+            const availableSeats = Math.max(
+                0,
+                Number(event.availableSeats ?? studentLimit - registeredCount)
             );
+
+            const eventFee = Number(event.eventFee ?? 0);
+
+            addTextElement(card, "p", "", "Maximum Seats: " + studentLimit);
+            addTextElement(card, "p", "", "Registered Students: " + registeredCount);
+
+            const seatsElement = addTextElement(
+                card,
+                "p",
+                "",
+                availableSeats === 0
+                    ? "Fully Booked"
+                    : "Seats Available: " + availableSeats
+            );
+
+            seatsElement.style.fontWeight = "bold";
+            seatsElement.style.color =
+                availableSeats === 0 ? "#dc2626" : "#15803d";
+
+            const feeElement = addTextElement(
+                card,
+                "p",
+                "",
+                eventFee === 0 ? "Event Fee: FREE" : "Event Fee: ₹" + eventFee
+            );
+
+            feeElement.style.fontWeight = "bold";
+            feeElement.style.color = "#2563eb";
+
+            const registerButton = document.createElement("button");
+            registerButton.className = "register";
+            registerButton.dataset.eventFee = String(eventFee);
+
+            if (availableSeats === 0) {
+                registerButton.textContent = "Fully Booked";
+                registerButton.disabled = true;
+            } else {
+                registerButton.textContent = "Register Now";
+
+                registerButton.addEventListener("click", () => {
+                    openRegistrationForm(event, registerButton);
+                });
+            }
+
+            card.appendChild(registerButton);
+            eventsList.appendChild(card);
         });
     }
 
-    card.appendChild(registerButton);
-    eventsList.appendChild(card);
-});
-    }
     async function loadEvents() {
         eventsList.replaceChildren();
 
@@ -510,8 +708,6 @@ card.appendChild(feeElement);
             "loading",
             "Loading campus events..."
         );
-
-        resultCount.textContent = "Loading events...";
 
         try {
             const response = await fetch("/events");
@@ -523,95 +719,183 @@ card.appendChild(feeElement);
             const events = await response.json();
 
             if (!Array.isArray(events)) {
-                throw new Error("Invalid event data received.");
+                throw new Error("Invalid event data.");
             }
 
             allEvents = events;
-
             populateCategories();
             renderEvents();
 
         } catch (error) {
             allEvents = [];
+
             eventsList.replaceChildren();
 
             addTextElement(
                 eventsList,
                 "div",
                 "empty",
-                "Could not load events. Please make sure the Java server is running, then refresh this page."
+                "Could not load events. Please check that the Java server is running."
             );
 
             resultCount.textContent = "Events unavailable";
         }
     }
 
-   
-async function registerEvent(eventId, eventName, button) {
-    const eventFeeElement = button.parentElement.querySelector(
-        ".event-fee"
-    );
+    function openRegistrationForm(event, button) {
+        const studentId = localStorage.getItem("campusStudentId");
 
-    const eventFee = Number(
-        button.dataset.eventFee ?? 0
-    );
-
-    if (eventFee > 0) {
-        const confirmed = confirm(
-            "Demo Payment\n\nEvent: " + eventName +
-            "\nFee: ₹" + eventFee +
-            "\n\nThis is a simulation. No real money will be charged.\n\nContinue?"
-        );
-
-        if (!confirmed) {
+        if (!studentId) {
+            showNotification(
+                "Please log in using your student account before registering.",
+                false
+            );
             return;
         }
 
-        alert(
-            "Demo payment successful!\n" +
-            "Amount: ₹" + eventFee +
-            "\n\nThis is only a simulation, not a real payment."
-        );
+        selectedEvent = event;
+        selectedButton = button;
+
+        document.getElementById("selectedEventName").textContent =
+            "Event: " + event.title;
+
+        // Prefill name and email from the student login session.
+        document.getElementById("fullName").value =
+            localStorage.getItem("campusStudentName") || "";
+
+        document.getElementById("studentEmail").value =
+            localStorage.getItem("campusStudentEmail") || "";
+
+        registrationForm.reset();
+
+        // Restore the prefilled values after resetting the form.
+        document.getElementById("fullName").value =
+            localStorage.getItem("campusStudentName") || "";
+
+        document.getElementById("studentEmail").value =
+            localStorage.getItem("campusStudentEmail") || "";
+
+        registrationModal.style.display = "flex";
     }
 
-    button.disabled = true;
-    button.textContent = "Registering...";
-
-    showNotification(
-        "Registering for " + eventName + "...",
-        true
-    );
-
-    try {
-        const response = await fetch("/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: new URLSearchParams({
-                studentId: localStorage.getItem("campusStudentId"),
-                eventId: String(eventId),
-                eventName: eventName
-            })
-        });
-
-        const message = await response.text();
-
-        showNotification(
-            message,
-            response.ok && /success|registered/i.test(message)
-        );
-
-    } catch (error) {
-        showNotification(
-            "Could not complete registration. Please try again.",
-            false
-        );
-    } finally {
-        button.disabled = false;
-        button.textContent = "Register Now";
+    function closeRegistrationForm() {
+        registrationModal.style.display = "none";
+        registrationForm.reset();
+        selectedEvent = null;
+        selectedButton = null;
     }
-}
+
+    document.getElementById("cancelRegistration")
+        .addEventListener("click", closeRegistrationForm);
+
+    registrationModal.addEventListener("click", function(event) {
+        if (event.target === registrationModal) {
+            closeRegistrationForm();
+        }
+    });
+
+    registrationForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        if (!selectedEvent || !selectedButton) {
+            showNotification("Please select an event first.", false);
+            return;
+        }
+
+        const studentId = localStorage.getItem("campusStudentId");
+
+        if (!studentId) {
+            showNotification("Please log in first.", false);
+            closeRegistrationForm();
+            return;
+        }
+
+        const fullName = document.getElementById("fullName").value.trim();
+        const registerNumber = document.getElementById("registerNumber").value.trim();
+        const email = document.getElementById("studentEmail").value.trim();
+        const phone = document.getElementById("phoneNumber").value.trim();
+        const department = document.getElementById("department").value;
+        const studyYear = document.getElementById("studyYear").value;
+
+        if (!fullName || !registerNumber || !email ||
+            !phone || !department || !studyYear) {
+            showNotification("Please complete all student details.", false);
+            return;
+        }
+
+        if (!/^[0-9]{10}$/.test(phone)) {
+            showNotification("Please enter a valid 10-digit phone number.", false);
+            return;
+        }
+
+        const eventFee = Number(selectedButton.dataset.eventFee || 0);
+
+        submitRegistration.disabled = true;
+        submitRegistration.textContent = "Registering...";
+
+        try {
+            const response = await fetch("/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    studentId: studentId,
+                    eventId: String(selectedEvent.eventId),
+                    eventName: selectedEvent.title,
+                    fullName: fullName,
+                    registerNumber: registerNumber,
+                    email: email,
+                    phone: phone,
+                    department: department,
+                    studyYear: studyYear
+                })
+            });
+
+            const message = await response.text();
+
+            if (response.status === 409) {
+                showNotification(
+                    "You have already registered for this event.",
+                    false
+                );
+                closeRegistrationForm();
+                return;
+            }
+
+            if (!response.ok) {
+                showNotification(message || "Registration failed.", false);
+                return;
+            }
+
+            if (/registration successful/i.test(message)) {
+                if (eventFee > 0) {
+                    alert(
+                        "Demo payment successful!\n" +
+                        "Amount: ₹" + eventFee +
+                        "\nNo real money was charged."
+                    );
+                }
+
+                showNotification(message, true);
+                closeRegistrationForm();
+
+                // Refresh seat counts after successful registration.
+                await loadEvents();
+            } else {
+                showNotification(message, false);
+            }
+
+        } catch (error) {
+            showNotification(
+                "Could not complete registration. Please try again.",
+                false
+            );
+        } finally {
+            submitRegistration.disabled = false;
+            submitRegistration.textContent = "Submit Registration";
+        }
+    });
 
     searchInput.addEventListener("input", renderEvents);
     categoryFilter.addEventListener("change", renderEvents);

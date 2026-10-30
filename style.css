@@ -1,6 +1,8 @@
-/* ================================
-   CampusConnect - Main Styles
-   ================================ */
+/* =====================================================
+   CAMPUSCONNECT - COMPLETE STYLESHEET
+   ===================================================== */
+
+/* -------------------- GLOBAL STYLES -------------------- */
 
 * {
     margin: 0;
@@ -8,190 +10,419 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #f5f7fb;
+    background: #f5f7fb;
     color: #1f2937;
     line-height: 1.6;
 }
 
-/* ================================
-   Navigation Bar
-   ================================ */
+a {
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
 
-header {
-    background-color: #172554;
+button {
+    cursor: pointer;
+}
+
+/* =====================================================
+   HOMEPAGE NAVIGATION
+   ===================================================== */
+
+body:has(#homeEvents) header {
+    width: 100%;
+    background: #172554;
     color: white;
 }
 
-.navbar {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 18px 30px;
+body:has(#homeEvents) .navbar {
+    max-width: 1250px;
+    min-height: 82px;
+    margin: auto;
+    padding: 15px 30px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 25px;
 }
 
-.logo {
-    font-size: 26px;
-    font-weight: bold;
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 30px;
-}
-
-.nav-links a {
+body:has(#homeEvents) .logo {
+    font-size: 27px;
+    font-weight: 800;
     color: white;
-    text-decoration: none;
-    font-size: 16px;
+    white-space: nowrap;
 }
 
-.nav-links a:hover {
+body:has(#homeEvents) .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    list-style: none;
+}
+
+body:has(#homeEvents) .nav-links a {
+    display: inline-block;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+body:has(#homeEvents) .nav-links a:not(.btn):hover {
     color: #93c5fd;
 }
 
-.login-button {
-    background-color: #2563eb;
+/* Navigation Explore and Learn More */
+
+body:has(#homeEvents) .nav-links .btn {
+    padding: 11px 20px;
+    border-radius: 8px;
+}
+
+body:has(#homeEvents) .nav-links .btn-primary {
+    background: white;
+    color: #1d4ed8;
+}
+
+body:has(#homeEvents) .nav-links .btn-primary:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+body:has(#homeEvents) .nav-links .btn-secondary {
+    background: transparent;
     color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
+    border: 2px solid white;
+}
+
+body:has(#homeEvents) .nav-links .btn-secondary:hover {
+    background: white;
+    color: #1d4ed8;
+}
+
+/* =====================================================
+   LOGIN AND REGISTER BUTTONS
+   ===================================================== */
+
+body:has(#homeEvents) .auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+body:has(#homeEvents) .login-button {
+    display: inline-block;
+    background: #4169e1;
+    color: white;
+    padding: 11px 23px;
+    border-radius: 8px;
     font-size: 15px;
+    font-weight: 700;
 }
 
-.login-button:hover {
-    background-color: #1d4ed8;
+body:has(#homeEvents) .login-button:hover {
+    background: #3154c9;
+    transform: translateY(-2px);
 }
 
-/* ================================
-   Hero Section
-   ================================ */
+body:has(#homeEvents) .register-nav-button {
+    display: inline-block;
+    background: white;
+    color: #1d4ed8;
+    padding: 11px 22px;
+    border: 2px solid white;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+}
 
-.hero {
-    background: linear-gradient(135deg, #172554, #2563eb);
-    color: white;
-    padding: 90px 30px;
+body:has(#homeEvents) .register-nav-button:hover {
+    background: #dbeafe;
+    transform: translateY(-2px);
+}
+
+/* =====================================================
+   HOMEPAGE HERO SECTION
+   ===================================================== */
+
+body:has(#homeEvents) .hero {
+    min-height: 510px;
+    padding: 100px 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     text-align: center;
+    color: white;
+
+    background: linear-gradient(
+        120deg,
+        #172554 0%,
+        #263f91 50%,
+        #4169e1 100%
+    );
 }
 
-.hero h1 {
-    font-size: 52px;
+body:has(#homeEvents) .hero-content {
+    max-width: 950px;
+    margin: auto;
+}
+
+body:has(#homeEvents) .welcome-text {
+    font-size: 19px;
+    font-weight: 600;
+    color: #dbeafe;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+}
+
+body:has(#homeEvents) .hero h1 {
+    font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.2;
+    font-weight: 800;
+    margin-bottom: 25px;
+}
+
+body:has(#homeEvents) .hero-description {
+    max-width: 780px;
+    margin: 0 auto 35px;
+    font-size: 19px;
+    line-height: 1.8;
+    color: #e5edff;
+}
+
+/* Hero Buttons */
+
+body:has(#homeEvents) .hero-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+body:has(#homeEvents) .primary-button,
+body:has(#homeEvents) .secondary-button {
+    display: inline-block;
+    padding: 14px 27px;
+    border-radius: 9px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+body:has(#homeEvents) .primary-button {
+    background: white;
+    color: #1d4ed8;
+    border: 2px solid white;
+}
+
+body:has(#homeEvents) .primary-button:hover {
+    background: #dbeafe;
+    transform: translateY(-3px);
+}
+
+body:has(#homeEvents) .secondary-button {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+body:has(#homeEvents) .secondary-button:hover {
+    background: white;
+    color: #1d4ed8;
+    transform: translateY(-3px);
+}
+
+/* =====================================================
+   UPCOMING EVENTS SECTION
+   ===================================================== */
+
+body:has(#homeEvents) .events-section {
+    max-width: 1250px;
+    margin: auto;
+    padding: 85px 30px;
+}
+
+body:has(#homeEvents) .section-heading {
+    margin-bottom: 35px;
+}
+
+body:has(#homeEvents) .section-label {
+    color: #4169e1;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    margin-bottom: 12px;
+}
+
+body:has(#homeEvents) .section-heading h2 {
+    color: #1f2937;
+    font-size: 38px;
+    line-height: 1.3;
+    margin-bottom: 12px;
+}
+
+body:has(#homeEvents) .section-heading > p:not(.section-label) {
+    color: #64748b;
+    font-size: 17px;
+    max-width: 750px;
+}
+
+/* =====================================================
+   EVENT CARDS
+   ===================================================== */
+
+body:has(#homeEvents) .event-container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 25px;
+    align-items: stretch;
+}
+
+body:has(#homeEvents) .event-card {
+    display: flex;
+    flex-direction: column;
+
+    background: white;
+    padding: 27px;
+    min-height: 270px;
+
+    border: 1px solid #e8edf5;
+    border-radius: 16px;
+
+    box-shadow: 0 6px 22px rgba(15, 23, 42, 0.06);
+
+    transition: transform 0.25s ease,
+                box-shadow 0.25s ease;
+}
+
+body:has(#homeEvents) .event-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+}
+
+body:has(#homeEvents) .event-category {
+    display: inline-block;
+    align-self: flex-start;
+
+    background: #e7efff;
+    color: #3154c9;
+
+    padding: 6px 14px;
+    border-radius: 30px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    margin-bottom: 18px;
+}
+
+body:has(#homeEvents) .event-card h3 {
+    color: #1e293b;
+    font-size: 22px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+
+body:has(#homeEvents) .event-card > p {
+    color: #64748b;
+    font-size: 15px;
+    line-height: 1.7;
     margin-bottom: 20px;
 }
 
-.hero p {
-    max-width: 750px;
-    margin: 0 auto 30px;
-    font-size: 18px;
-}
-
-.hero-buttons {
+body:has(#homeEvents) .event-details {
     display: flex;
-    justify-content: center;
-    gap: 15px;
+    flex-direction: column;
+    gap: 8px;
+
+    color: #475569;
+    font-size: 14px;
+
+    margin-top: auto;
+    margin-bottom: 20px;
 }
 
-.btn {
+body:has(#homeEvents) .event-details span {
+    display: block;
+}
+
+body:has(#homeEvents) .register-button {
     display: inline-block;
-    padding: 12px 24px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: bold;
-}
+    align-self: flex-start;
 
-.btn-primary {
-    background-color: white;
-    color: #1d4ed8;
-}
-
-.btn-primary:hover {
-    background-color: #e5e7eb;
-}
-
-.btn-secondary {
-    border: 2px solid white;
+    background: #4169e1;
     color: white;
+
+    padding: 10px 19px;
+    border-radius: 7px;
+
+    font-size: 14px;
+    font-weight: 700;
 }
 
-.btn-secondary:hover {
-    background-color: white;
-    color: #1d4ed8;
+body:has(#homeEvents) .register-button:hover {
+    background: #294fbd;
 }
 
-/* ================================
-   Events Section
-   ================================ */
+/* =====================================================
+   ABOUT SECTION
+   ===================================================== */
 
-.events-section {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 70px 30px;
+body:has(#homeEvents) .about-section {
+    background: white;
+    padding: 85px 30px;
+    text-align: center;
 }
 
-.section-label {
-    color: #2563eb;
-    font-weight: bold;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
+body:has(#homeEvents) .about-section .section-heading {
+    max-width: 850px;
+    margin: auto;
 }
 
-.events-section h2 {
-    font-size: 36px;
-    margin-bottom: 10px;
+body:has(#homeEvents) .about-section h2 {
+    font-size: 38px;
+    color: #1e293b;
+    margin-bottom: 18px;
 }
 
-.section-description {
-    color: #6b7280;
-    margin-bottom: 40px;
+body:has(#homeEvents) .about-section p:not(.section-label) {
+    color: #64748b;
+    font-size: 17px;
+    line-height: 1.8;
 }
 
-/* ================================
-   Event Cards
-   ================================ */
+/* =====================================================
+   HOMEPAGE FOOTER
+   ===================================================== */
+
+body:has(#homeEvents) footer {
+    background: #111827;
+    color: white;
+    text-align: center;
+    padding: 25px;
+}
+
+body:has(#homeEvents) footer p {
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+/* =====================================================
+   GENERAL EVENT PAGE STYLES
+   ===================================================== */
 
 .events-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 25px;
-}
-
-.event-card {
-    background-color: white;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s ease;
-}
-
-.event-card:hover {
-    transform: translateY(-5px);
-}
-
-.event-category {
-    display: inline-block;
-    background-color: #dbeafe;
-    color: #1d4ed8;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.event-card h3 {
-    font-size: 24px;
-    margin-bottom: 12px;
-}
-
-.event-card p {
-    color: #6b7280;
-    margin-bottom: 15px;
 }
 
 .event-info {
@@ -201,73 +432,20 @@ header {
 
 .view-event {
     display: inline-block;
-    background-color: #2563eb;
+    background: #2563eb;
     color: white;
-    text-decoration: none;
     padding: 10px 18px;
     border-radius: 6px;
 }
 
 .view-event:hover {
-    background-color: #1d4ed8;
+    background: #1d4ed8;
 }
 
-/* ================================
-   About Section
-   ================================ */
+/* =====================================================
+   LOGIN PAGE
+   ===================================================== */
 
-.about-section {
-    background-color: white;
-    padding: 70px 30px;
-    text-align: center;
-}
-
-.about-section h2 {
-    font-size: 36px;
-    margin-bottom: 20px;
-}
-
-.about-section p {
-    max-width: 750px;
-    margin: 0 auto;
-    color: #6b7280;
-}
-
-/* ================================
-   Footer
-   ================================ */
-
-footer {
-    background-color: #111827;
-    color: white;
-    text-align: center;
-    padding: 25px;
-}
-
-/* ================================
-   Responsive Design
-   ================================ */
-
-@media (max-width: 768px) {
-
-    .navbar {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .nav-links {
-        gap: 15px;
-    }
-
-    .hero h1 {
-        font-size: 38px;
-    }
-
-    .hero-buttons {
-        flex-direction: column;
-        align-items: center;
-    }
-}
 .login-container {
     min-height: 80vh;
     display: flex;
@@ -278,6 +456,7 @@ footer {
 
 .login-box {
     width: 400px;
+    max-width: 100%;
     background: white;
     padding: 40px;
     border-radius: 15px;
@@ -324,16 +503,18 @@ footer {
 .login-box button:hover {
     background: #1d4ed8;
 }
-/* =========================
-   LOGIN PAGE
-   ========================= */
+
+/* Login Container */
 
 .login-container {
     width: 500px;
+    max-width: calc(100% - 30px);
     margin: 80px auto;
     padding: 40px;
+
     background: white;
     border-radius: 15px;
+
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.12);
     box-sizing: border-box;
 }
@@ -341,14 +522,14 @@ footer {
 .login-container h1 {
     text-align: center;
     color: #1e3a8a;
-    margin: 0 0 10px 0;
+    margin: 0 0 10px;
     font-size: 36px;
 }
 
 .login-container h2 {
     text-align: center;
     color: #333;
-    margin: 0 0 30px 0;
+    margin: 0 0 30px;
     font-size: 26px;
 }
 
@@ -369,8 +550,10 @@ footer {
     width: 100%;
     padding: 12px;
     margin-bottom: 20px;
+
     border: 1px solid #ccc;
     border-radius: 6px;
+
     font-size: 16px;
     box-sizing: border-box;
 }
@@ -378,14 +561,96 @@ footer {
 .login-container button {
     width: 100%;
     padding: 12px;
-    background-color: #1e3a8a;
+
+    background: #1e3a8a;
     color: white;
+
     border: none;
     border-radius: 6px;
+
     font-size: 16px;
     cursor: pointer;
 }
 
 .login-container button:hover {
-    background-color: #162d6b;
+    background: #162d6b;
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN
+   ===================================================== */
+
+@media (max-width: 900px) {
+
+    body:has(#homeEvents) .event-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body:has(#homeEvents) .navbar {
+        padding: 15px 20px;
+    }
+
+    body:has(#homeEvents) .nav-links {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 650px) {
+
+    body:has(#homeEvents) .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    body:has(#homeEvents) .nav-links {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    body:has(#homeEvents) .auth-buttons {
+        justify-content: center;
+    }
+
+    body:has(#homeEvents) .hero {
+        min-height: auto;
+        padding: 75px 20px;
+    }
+
+    body:has(#homeEvents) .hero h1 {
+        font-size: 36px;
+    }
+
+    body:has(#homeEvents) .hero-description {
+        font-size: 16px;
+    }
+
+    body:has(#homeEvents) .hero-buttons {
+        flex-direction: column;
+    }
+
+    body:has(#homeEvents) .primary-button,
+    body:has(#homeEvents) .secondary-button {
+        width: 100%;
+        max-width: 260px;
+        text-align: center;
+    }
+
+    body:has(#homeEvents) .events-section {
+        padding: 55px 20px;
+    }
+
+    body:has(#homeEvents) .event-container {
+        grid-template-columns: 1fr;
+    }
+
+    body:has(#homeEvents) .section-heading h2,
+    body:has(#homeEvents) .about-section h2 {
+        font-size: 30px;
+    }
+
+    .login-container {
+        margin: 35px auto;
+        padding: 25px;
+    }
 }

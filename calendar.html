@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect - Event Calendar</title>
+
+    <link rel="stylesheet" href="calendar.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">Campus<span>Connect</span></div>
+
+        <nav>
+            <a href="student-dashboard.html">Dashboard</a>
+            <a href="events.html">Events</a>
+            <a href="calendar.html" class="active">Calendar</a>
+        </nav>
+    </header>
+
+    <main class="container">
+
+        <section class="page-heading">
+            <div>
+                <h1>Campus Event Calendar</h1>
+                <p>Explore upcoming events and never miss an opportunity.</p>
+            </div>
+
+            <a href="events.html" class="view-events-btn">
+                Explore Events
+            </a>
+        </section>
+
+        <section class="calendar-layout">
+
+            <div class="calendar-card">
+
+                <div class="calendar-header">
+                    <button id="prevMonth" class="month-btn">&lt;</button>
+
+                    <h2 id="monthYear">October 2026</h2>
+
+                    <button id="nextMonth" class="month-btn">&gt;</button>
+                </div>
+
+                <div class="calendar-weekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+
+                <div id="calendarDays" class="calendar-days">
+                    <!-- Calendar dates will appear here -->
+                </div>
+
+                <div class="calendar-legend">
+                    <span><i class="today-dot"></i> Today</span>
+                    <span><i class="event-dot"></i> Event scheduled</span>
+                </div>
+
+            </div>
+
+            <aside class="event-sidebar">
+
+                <h2 id="selectedDate">Select a Date</h2>
+
+                <p class="sidebar-description">
+                    Events scheduled for the selected date.
+                </p>
+
+                <div id="selectedEvents">
+                    <p class="empty-message">
+                        Select a date to view events.
+                    </p>
+                </div>
+
+            </aside>
+
+        </section>
+
+        <section class="upcoming-section">
+
+            <h2>Upcoming Events</h2>
+            <p>Stay updated with the latest campus activities.</p>
+
+            <div id="upcomingEvents" class="upcoming-events">
+                <p>Loading upcoming events...</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 CampusConnect. All rights reserved.</p>
+    </footer>
+
+    <script src="calendar.js"></script>
+
+</body>
+</html>

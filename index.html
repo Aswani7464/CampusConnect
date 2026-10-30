@@ -1,34 +1,248 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>CampusConnect - Campus Event Portal</title>
+
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Homepage Calendar Section */
+
+        .homepage-calendar {
+            width: 100%;
+            max-width: 1400px;
+            margin: 60px auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .homepage-calendar .section-heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .calendar-frame-container {
+            width: 100%;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .calendar-frame-container iframe {
+            display: block;
+            width: 100%;
+            min-height: 950px;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .homepage-calendar {
+                padding: 10px;
+                margin: 35px auto;
+            }
+
+            .calendar-frame-container iframe {
+                min-height: 1100px;
+            }
+        }
+
+
+        /* Registration Popup */
+
+        .register-modal {
+            display: none;
+            position: fixed;
+            z-index: 99999;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .register-box {
+            position: relative;
+            background: #ffffff;
+            width: 100%;
+            max-width: 440px;
+            padding: 30px;
+            border-radius: 15px;
+            max-height: 95vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
+            box-sizing: border-box;
+        }
+
+        .register-box h2 {
+            text-align: center;
+            color: #172554;
+            margin-bottom: 8px;
+        }
+
+        .register-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .close-register {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            border: none;
+            background: none;
+            font-size: 30px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .register-box label {
+            display: block;
+            margin-top: 13px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .register-box input,
+        .register-box select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .register-box input:focus,
+        .register-box select:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        #createAccountButton {
+            width: 100%;
+            padding: 13px;
+            margin-top: 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #createAccountButton:hover {
+            background: #1d4ed8;
+        }
+
+        #createAccountButton:disabled {
+            background: #888;
+            cursor: not-allowed;
+        }
+
+        #registerMessage {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .existing-account {
+            text-align: center;
+            margin-top: 18px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .existing-account a {
+            color: #2563eb;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        @media (max-width: 480px) {
+            .register-box {
+                padding: 25px 20px;
+            }
+        }
+
+    </style>
 </head>
 
 <body>
+
+    <!-- Navigation Bar -->
+
     <header>
         <nav class="navbar">
+
             <div class="logo">CampusConnect</div>
 
             <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="#events" class="btn btn-primary">Explore Events</a></li>
-                <li><a href="#about" class="btn btn-secondary">Learn More</a></li>
+
+                <li>
+                    <a href="/">Home</a>
+                </li>
+
+                <li>
+                    <a href="#events" class="btn btn-primary">
+                        Explore Events
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#about" class="btn btn-secondary">
+                        Learn More
+                    </a>
+                </li>
+
             </ul>
 
-            <a href="/login.html" class="login-button">Login</a>
+            <!-- Login and Register Buttons -->
+
+            <div class="auth-buttons">
+
+                <a href="/login.html" class="login-button">
+                    Login
+                </a>
+
+                <button
+                    type="button"
+                    class="register-nav-button"
+                    id="openRegister">
+                    Register
+                </button>
+
+            </div>
+
         </nav>
     </header>
 
-    <main>
-        <section class="hero">
-            <div class="hero-content">
-                <p class="welcome-text">Welcome to CampusConnect</p>
 
-                <h1>Discover. Connect. Participate.</h1>
+    <main>
+
+        <!-- Hero Section -->
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <p class="welcome-text">
+                    Welcome to CampusConnect
+                </p>
+
+                <h1>
+                    Discover. Connect. Participate.
+                </h1>
 
                 <p class="hero-description">
                     Discover exciting events happening on your campus,
@@ -37,47 +251,462 @@
                 </p>
 
                 <div class="hero-buttons">
-                    <a href="#events" class="primary-button">Explore Events</a>
-                    <a href="#about" class="secondary-button">Learn More</a>
+
+                    <a href="#events" class="primary-button">
+                        Explore Events
+                    </a>
+
+                    <a href="#about" class="secondary-button">
+                        Learn More
+                    </a>
+
                 </div>
+
             </div>
+
         </section>
 
+
+        <!-- Explore Events Section -->
+
         <section id="events" class="events-section">
+
             <div class="section-heading">
-                <p class="section-label">CAMPUS EVENTS</p>
-                <h2>Upcoming Events</h2>
+
+                <p class="section-label">
+                    CAMPUS EVENTS
+                </p>
+
+                <h2>
+                    Upcoming Events
+                </h2>
 
                 <p>
                     Find events, workshops, competitions and activities
                     happening around your campus.
                 </p>
+
             </div>
 
-            <!-- Events will be loaded from the Java server -->
+
+            <!-- Events loaded from Java Backend -->
+
             <div class="event-container" id="homeEvents">
+
                 <p>Loading upcoming events...</p>
+
             </div>
+
+
+            <!-- Event Calendar -->
+
+            <div class="homepage-calendar">
+
+                <div class="section-heading">
+
+                    <p class="section-label">
+                        EVENT SCHEDULE
+                    </p>
+
+                    <h2>
+                        Campus Event Calendar
+                    </h2>
+
+                    <p>
+                        Explore the monthly event schedule, check event dates
+                        and discover upcoming campus activities.
+                    </p>
+
+                </div>
+
+                <div class="calendar-frame-container">
+
+                    <iframe
+                        src="/calendar.html"
+                        title="CampusConnect Event Calendar"
+                        loading="lazy">
+                    </iframe>
+
+                </div>
+
+            </div>
+
         </section>
 
+
+        <!-- About Section -->
+
         <section id="about" class="about-section">
+
             <div class="section-heading">
-                <p class="section-label">ABOUT CAMPUSCONNECT</p>
-                <h2>Your Campus. Your Events.</h2>
+
+                <p class="section-label">
+                    ABOUT CAMPUSCONNECT
+                </p>
+
+                <h2>
+                    Your Campus. Your Events.
+                </h2>
 
                 <p>
                     CampusConnect is a campus event portal designed to
                     help students discover, register for and manage
                     college events in one place.
                 </p>
+
             </div>
+
         </section>
+
     </main>
 
+
+    <!-- Footer -->
+
     <footer>
-        <p>© 2026 CampusConnect. Campus Event Portal.</p>
+
+        <p>
+            © 2026 CampusConnect. Campus Event Portal.
+        </p>
+
     </footer>
 
+
+    <!-- REGISTRATION POPUP -->
+
+    <div
+        id="registerModal"
+        class="register-modal">
+
+        <div class="register-box">
+
+            <button
+                type="button"
+                class="close-register"
+                id="closeRegister"
+                aria-label="Close registration">
+                &times;
+            </button>
+
+            <h2>Create Your Account</h2>
+
+            <p class="register-subtitle">
+                Join CampusConnect and explore campus events.
+            </p>
+
+
+            <form id="registerForm">
+
+                <label for="registerName">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="registerName"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+
+                <label for="registerEmail">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="registerEmail"
+                    placeholder="Enter your email address"
+                    required
+                >
+
+
+                <label for="registerPassword">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="registerPassword"
+                    placeholder="Create a password"
+                    minlength="8"
+                    required
+                >
+
+
+                <label for="registerConfirmPassword">
+                    Confirm Password
+                </label>
+
+                <input
+                    type="password"
+                    id="registerConfirmPassword"
+                    placeholder="Confirm your password"
+                    minlength="8"
+                    required
+                >
+
+
+                <label for="registerRole">
+                    Register As
+                </label>
+
+                <select id="registerRole" required>
+
+                    <option value="student">
+                        Student
+                    </option>
+
+                    <option value="organizer">
+                        Event Organizer
+                    </option>
+
+                </select>
+
+
+                <button
+                    type="submit"
+                    id="createAccountButton">
+                    Create Account
+                </button>
+
+                <p id="registerMessage" role="status"></p>
+
+            </form>
+
+
+            <p class="existing-account">
+                Already have an account?
+                <a href="/login.html">Login</a>
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Existing Homepage JavaScript -->
+
     <script src="script.js"></script>
+
+
+    <!-- Registration JavaScript -->
+
+    <script>
+
+        const registerModal =
+            document.getElementById("registerModal");
+
+        const openRegister =
+            document.getElementById("openRegister");
+
+        const closeRegister =
+            document.getElementById("closeRegister");
+
+        const registerForm =
+            document.getElementById("registerForm");
+
+        const registerMessage =
+            document.getElementById("registerMessage");
+
+        const createAccountButton =
+            document.getElementById("createAccountButton");
+
+
+        // Open Registration Popup
+
+        openRegister.addEventListener("click", function () {
+
+            registerModal.style.display = "flex";
+
+            registerMessage.textContent = "";
+
+        });
+
+
+        // Close Registration Popup
+
+        closeRegister.addEventListener("click", function () {
+
+            registerModal.style.display = "none";
+
+        });
+
+
+        // Close popup when clicking outside
+
+        registerModal.addEventListener("click", function (event) {
+
+            if (event.target === registerModal) {
+
+                registerModal.style.display = "none";
+
+            }
+
+        });
+
+
+        // Close popup using Escape key
+
+        document.addEventListener("keydown", function (event) {
+
+            if (event.key === "Escape") {
+
+                registerModal.style.display = "none";
+
+            }
+
+        });
+
+
+        // Registration Form Submission
+
+        registerForm.addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+
+            const name =
+                document.getElementById("registerName").value.trim();
+
+            const email =
+                document.getElementById("registerEmail").value.trim();
+
+            const password =
+                document.getElementById("registerPassword").value;
+
+            const confirmPassword =
+                document.getElementById("registerConfirmPassword").value;
+
+            const role =
+                document.getElementById("registerRole").value;
+
+
+            // Validate password
+
+            if (password.length < 8) {
+
+                registerMessage.style.color = "red";
+
+                registerMessage.textContent =
+                    "Password must contain at least 8 characters.";
+
+                return;
+
+            }
+
+
+            // Confirm password
+
+            if (password !== confirmPassword) {
+
+                registerMessage.style.color = "red";
+
+                registerMessage.textContent =
+                    "Passwords do not match.";
+
+                return;
+
+            }
+
+
+            // Select backend endpoint
+
+            const endpoint = role === "organizer"
+                ? "/organizer-signup"
+                : "/signup";
+
+
+            // Prepare form data
+
+            const formData = new URLSearchParams();
+
+            formData.append("name", name);
+
+            formData.append("email", email);
+
+            formData.append("password", password);
+
+
+            createAccountButton.disabled = true;
+
+            createAccountButton.textContent =
+                "Creating Account...";
+
+            registerMessage.textContent = "";
+
+
+            try {
+
+                const response = await fetch(endpoint, {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+                    },
+
+                    body: formData.toString()
+
+                });
+
+
+                const result = await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.message ||
+                        result.detail ||
+                        "Account creation failed."
+                    );
+
+                }
+
+
+                // Successful registration
+
+                registerMessage.style.color = "green";
+
+                registerMessage.textContent =
+                    result.message ||
+                    "Account created successfully!";
+
+
+                registerForm.reset();
+
+
+                // Redirect to login
+
+                setTimeout(function () {
+
+                    window.location.href = "/login.html";
+
+                }, 1500);
+
+
+            } catch (error) {
+
+                registerMessage.style.color = "red";
+
+                registerMessage.textContent =
+                    error.message || "Something went wrong.";
+
+            } finally {
+
+                createAccountButton.disabled = false;
+
+                createAccountButton.textContent =
+                    "Create Account";
+
+            }
+
+        });
+
+    </script>
+
 </body>
+
 </html>

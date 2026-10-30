@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | CampusConnect</title>
+
+```
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+        background: #f4f6fb;
+        color: #20243a;
+    }
+
+    .navbar {
+        height: 70px;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 7%;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .logo {
+        font-size: 23px;
+        font-weight: 800;
+        color: #5146d8;
+    }
+
+    .back-link {
+        text-decoration: none;
+        color: #5146d8;
+        font-weight: 600;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+    }
+
+    .heading h1 {
+        font-size: 30px;
+        margin-bottom: 7px;
+    }
+
+    .heading p {
+        color: #777d91;
+    }
+
+    button {
+        cursor: pointer;
+        border: none;
+    }
+
+    .read-all {
+        background: #5146d8;
+        color: white;
+        padding: 12px 19px;
+        border-radius: 9px;
+        font-weight: 600;
+    }
+
+    .read-all:hover {
+        background: #4035bd;
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 22px;
+        border-radius: 14px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.04);
+    }
+
+    .stat-card p {
+        color: #777d91;
+        font-size: 14px;
+    }
+
+    .stat-card h2 {
+        font-size: 27px;
+        margin-top: 9px;
+    }
+
+    .filters {
+        background: white;
+        padding: 16px;
+        border-radius: 13px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .filter-btn {
+        background: #f1f1f8;
+        color: #555b70;
+        padding: 10px 17px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .filter-btn.active {
+        background: #5146d8;
+        color: white;
+    }
+
+    .notification-list {
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+    }
+
+    .notification {
+        background: white;
+        padding: 21px;
+        border-radius: 13px;
+        display: flex;
+        gap: 17px;
+        align-items: flex-start;
+        box-shadow: 0 3px 13px rgba(0,0,0,0.035);
+        border-left: 4px solid transparent;
+        transition: 0.2s;
+    }
+
+    .notification.unread {
+        background: #f0efff;
+        border-left-color: #5146d8;
+    }
+
+    .icon {
+        min-width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        background: #e9e7ff;
+    }
+
+    .notification-content {
+        flex: 1;
+    }
+
+    .notification-content h3 {
+        font-size: 16px;
+        margin-bottom: 7px;
+    }
+
+    .notification-content p {
+        color: #686e81;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .meta {
+        display: flex;
+        gap: 13px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+        color: #85899a;
+        font-size: 12px;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 4px 9px;
+        border-radius: 20px;
+        background: #e8e6ff;
+        color: #5146d8;
+        font-size: 11px;
+        font-weight: 700;
+        margin-top: 10px;
+    }
+
+    .notification-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .action-btn {
+        background: transparent;
+        color: #5146d8;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .empty {
+        background: white;
+        padding: 55px 20px;
+        text-align: center;
+        border-radius: 14px;
+        color: #777d91;
+    }
+
+    .empty div {
+        font-size: 42px;
+        margin-bottom: 12px;
+    }
+
+    .error {
+        background: #fff0f0;
+        color: #b42318;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        display: none;
+    }
+
+    @media(max-width: 650px) {
+        .stats {
+            grid-template-columns: 1fr;
+        }
+
+        .heading h1 {
+            font-size: 25px;
+        }
+
+        .notification {
+            padding: 15px;
+        }
+
+        .notification-actions {
+            align-items: flex-end;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">CampusConnect</div>
+    <a href="student-dashboard.html" class="back-link">← Back to Dashboard</a>
+</nav>
+
+<main class="container">
+
+```
+<section class="heading">
+    <div>
+        <h1>Notifications 🔔</h1>
+        <p>Stay updated with your campus activities and events.</p>
+    </div>
+
+    <button class="read-all" onclick="markAllAsRead()">
+        Mark All as Read
+    </button>
+</section>
+
+<div class="stats">
+    <div class="stat-card">
+        <p>Total Notifications</p>
+        <h2 id="totalCount">0</h2>
+    </div>
+
+    <div class="stat-card">
+        <p>Unread Notifications</p>
+        <h2 id="unreadCount">0</h2>
+    </div>
+
+    <div class="stat-card">
+        <p>Read Notifications</p>
+        <h2 id="readCount">0</h2>
+    </div>
+</div>
+
+<div id="errorMessage" class="error"></div>
+
+<div class="filters">
+    <button class="filter-btn active" onclick="filterNotifications('all', this)">All</button>
+    <button class="filter-btn" onclick="filterNotifications('event', this)">Events</button>
+    <button class="filter-btn" onclick="filterNotifications('registration', this)">Registration</button>
+    <button class="filter-btn" onclick="filterNotifications('certificate', this)">Certificates</button>
+    <button class="filter-btn" onclick="filterNotifications('attendance', this)">Attendance</button>
+    <button class="filter-btn" onclick="filterNotifications('announcement', this)">Announcements</button>
+</div>
+
+<div id="notificationList" class="notification-list">
+    <div class="empty">
+        <div>🔔</div>
+        <h3>Loading notifications...</h3>
+    </div>
+</div>
+```
+
+</main>
+
+<script>
+    const API_URL = window.location.origin;
+
+    const studentId = localStorage.getItem("campusStudentId");
+
+    let notifications = [];
+    let currentFilter = "all";
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, character => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[character]);
+    }
+
+    function getCategory(notification) {
+        const text = (
+            (notification.title || "") + " " +
+            (notification.message || "")
+        ).toLowerCase();
+
+        if (text.includes("certificate")) return "certificate";
+        if (text.includes("attendance")) return "attendance";
+        if (text.includes("registration") || text.includes("registered")) return "registration";
+        if (text.includes("announcement")) return "announcement";
+
+        return "event";
+    }
+
+    function getIcon(category) {
+        const icons = {
+            event: "🎉",
+            registration: "✅",
+            certificate: "🏆",
+            attendance: "📋",
+            announcement: "📢"
+        };
+
+        return icons[category] || "🔔";
+    }
+
+    function updateStatistics() {
+        const unread = notifications.filter(n => !n.read).length;
+
+        document.getElementById("totalCount").textContent = notifications.length;
+        document.getElementById("unreadCount").textContent = unread;
+        document.getElementById("readCount").textContent = notifications.length - unread;
+    }
+
+    async function loadNotifications() {
+        const list = document.getElementById("notificationList");
+        const error = document.getElementById("errorMessage");
+
+        if (!studentId) {
+            list.innerHTML = `
+                <div class="empty">
+                    <div>🔐</div>
+                    <h3>Please log in first</h3>
+                    <p>Your student account is required to view notifications.</p>
+                </div>
+            `;
+            return;
+        }
+
+        try {
+            error.style.display = "none";
+
+            const response = await fetch(
+                `${API_URL}/notifications?studentId=${encodeURIComponent(studentId)}`
+            );
+
+            if (!response.ok) {
+                throw new Error("Unable to load notifications. Server returned " + response.status);
+            }
+
+            notifications = await response.json();
+
+            if (!Array.isArray(notifications)) {
+                throw new Error("Invalid notification data received from server.");
+            }
+
+            updateStatistics();
+            renderNotifications();
+
+        } catch (err) {
+            error.textContent = err.message;
+            error.style.display = "block";
+
+            list.innerHTML = `
+                <div class="empty">
+                    <div>⚠️</div>
+                    <h3>Unable to load notifications</h3>
+                    <p>Make sure the CampusConnect Java server is running.</p>
+                    <button class="read-all" style="margin-top:15px" onclick="loadNotifications()">
+                        Try Again
+                    </button>
+                </div>
+            `;
+        }
+    }
+
+    function renderNotifications() {
+        const list = document.getElementById("notificationList");
+
+        let filtered = notifications;
+
+        if (currentFilter !== "all") {
+            filtered = notifications.filter(
+                n => getCategory(n) === currentFilter
+            );
+        }
+
+        if (filtered.length === 0) {
+            list.innerHTML = `
+                <div class="empty">
+                    <div>📭</div>
+                    <h3>No notifications found</h3>
+                    <p>New updates will appear here.</p>
+                </div>
+            `;
+            return;
+        }
+
+        list.innerHTML = filtered.map(n => {
+            const category = getCategory(n);
+            const title = escapeHTML(n.title || "Campus Update");
+            const message = escapeHTML(n.message || "");
+            const date = escapeHTML(n.createdAt || "");
+            const eventDate = escapeHTML(n.eventDate || "");
+            const venue = escapeHTML(n.venue || "");
+
+            return `
+                <article class="notification ${n.read ? "" : "unread"}">
+
+                    <div class="icon">${getIcon(category)}</div>
+
+                    <div class="notification-content">
+                        <h3>${title}</h3>
+                        <p>${message}</p>
+
+                        <span class="badge">${category.toUpperCase()}</span>
+
+                        <div class="meta">
+                            <span>🕒 ${date || "Recently"}</span>
+                            ${eventDate ? `<span>📅 Event: ${eventDate}</span>` : ""}
+                            ${venue ? `<span>📍 ${venue}</span>` : ""}
+                        </div>
+                    </div>
+
+                    <div class="notification-actions">
+                        ${n.read
+                            ? `<span style="color:#29945c;font-size:12px">✓ Read</span>`
+                            : `<button class="action-btn" onclick="markAsRead(${Number(n.notificationId)})">Mark as read</button>`
+                        }
+                    </div>
+
+                </article>
+            `;
+        }).join("");
+    }
+
+    function filterNotifications(category, button) {
+        currentFilter = category;
+
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+        renderNotifications();
+    }
+
+    async function markAsRead(notificationId) {
+        try {
+            const response = await fetch(`${API_URL}/mark-notification-read`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    studentId: Number(studentId),
+                    notificationId: notificationId
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error("Could not update notification.");
+            }
+
+            const notification = notifications.find(
+                n => Number(n.notificationId) === notificationId
+            );
+
+            if (notification) {
+                notification.read = true;
+            }
+
+            updateStatistics();
+            renderNotifications();
+
+        } catch (err) {
+            alert(err.message);
+        }
+    }
+
+    async function markAllAsRead() {
+        const unread = notifications.filter(n => !n.read);
+
+        if (unread.length === 0) {
+            alert("All notifications are already read.");
+            return;
+        }
+
+        for (const notification of unread) {
+            try {
+                const response = await fetch(`${API_URL}/mark-notification-read`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        studentId: Number(studentId),
+                        notificationId: Number(notification.notificationId)
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Some notifications could not be updated.");
+                }
+
+                notification.read = true;
+
+            } catch (err) {
+                updateStatistics();
+                renderNotifications();
+                alert(err.message);
+                return;
+            }
+        }
+
+        updateStatistics();
+        renderNotifications();
+    }
+
+    loadNotifications();
+</script>
+
+</body>
+</html>

@@ -1,408 +1,407 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registrations | CampusConnect</title>
+
+    <title>Register - CampusConnect</title>
 
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
 
         body {
-            background: #f1f5f9;
-            color: #1e293b;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eef2ff, #dbeafe);
+            display: flex;
+            flex-direction: column;
         }
 
-        nav {
-            background: #3730a3;
-            color: white;
+        header {
+            background: #ffffff;
             padding: 18px 7%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
         }
 
-        nav a {
-            color: white;
+        .logo {
+            color: #2563eb;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .header-link {
             text-decoration: none;
-            margin-left: 18px;
+            color: #2563eb;
+            font-weight: bold;
         }
 
         .container {
-            max-width: 1100px;
-            margin: 35px auto;
-            padding: 0 20px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 35px 15px;
         }
 
-        h1 {
-            color: #312e81;
+        .register-card {
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.10);
+        }
+
+        .register-card h1 {
+            text-align: center;
+            color: #1e293b;
             margin-bottom: 10px;
         }
 
         .subtitle {
+            text-align: center;
             color: #64748b;
-            line-height: 1.6;
-            margin-bottom: 25px;
+            margin-bottom: 28px;
+            font-size: 14px;
         }
 
-        .panel {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-            margin-bottom: 22px;
+        .form-group {
+            margin-bottom: 18px;
         }
 
         label {
             display: block;
+            margin-bottom: 8px;
+            color: #334155;
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 9px;
         }
 
-        select {
+        input, select {
             width: 100%;
-            max-width: 550px;
-            padding: 12px;
+            padding: 13px;
             border: 1px solid #cbd5e1;
-            border-radius: 7px;
+            border-radius: 8px;
             font-size: 15px;
-            background: white;
+            outline: none;
         }
 
-        button {
+        input:focus, select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .register-button {
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
             border: none;
-            border-radius: 7px;
-            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .register-button:hover {
+            background: #1d4ed8;
+        }
+
+        .register-button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .message {
             margin-top: 15px;
-        }
-
-        .primary {
-            background: #4f46e5;
-            color: white;
-        }
-
-        .secondary {
-            background: #e2e8f0;
-            color: #334155;
-        }
-
-        .summary {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 22px;
-        }
-
-        .summary-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            flex: 1;
-            min-width: 170px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .summary-card p {
-            color: #64748b;
-            margin-bottom: 8px;
-        }
-
-        .summary-card strong {
-            font-size: 27px;
-            color: #312e81;
-        }
-
-        .table-wrapper {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 650px;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        th {
-            background: #eef2ff;
-            color: #312e81;
-        }
-
-        .empty {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            color: #64748b;
             text-align: center;
+            font-size: 14px;
+            line-height: 1.5;
         }
 
-        .notice {
-            display: none;
-            padding: 13px;
-            border-radius: 7px;
-            margin-bottom: 20px;
+        .login-text {
+            text-align: center;
+            margin-top: 22px;
+            color: #64748b;
+            font-size: 14px;
         }
 
-        .notice.error {
-            display: block;
-            background: #fee2e2;
-            color: #991b1b;
+        .login-text a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
         }
 
         footer {
             text-align: center;
-            padding: 30px;
+            padding: 18px;
             color: #64748b;
+            font-size: 13px;
+        }
+
+        @media (max-width: 500px) {
+            .register-card {
+                padding: 25px 20px;
+            }
+
+            header {
+                padding: 16px 5%;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<nav>
-    <h2>CampusConnect</h2>
-    <div>
-        <a href="organizer-dashboard.html">Dashboard</a>
-        <a href="manage-events.html">Manage Events</a>
-        <a href="index.html">Home</a>
-    </div>
-</nav>
+    <header>
+        <div class="logo">CampusConnect</div>
 
-<main class="container">
-    <h1>Student Registrations</h1>
-    <p class="subtitle">
-        Select a campus event to view the students registered for it.
-    </p>
+        <a href="/index.html" class="header-link">
+            Back to Home
+        </a>
+    </header>
 
-    <section class="panel">
-        <label for="eventSelect">Choose Event</label>
-        <select id="eventSelect">
-            <option value="">Loading events...</option>
-        </select>
+    <main class="container">
 
-        <br>
+        <div class="register-card">
 
-        <button class="primary" id="loadButton" type="button">
-            View Registrations
-        </button>
-        <button class="secondary" id="refreshButton" type="button">
-            Refresh Events
-        </button>
-    </section>
+            <h1>Create Account</h1>
 
-    <div id="notice" class="notice" role="status" aria-live="polite"></div>
+            <p class="subtitle">
+                Join CampusConnect and explore campus events.
+            </p>
 
-    <section class="summary">
-        <div class="summary-card">
-            <p>Selected Event</p>
-            <strong id="selectedEvent">—</strong>
+            <form id="registrationForm">
+
+                <div class="form-group">
+                    <label for="accountType">Account Type</label>
+
+                    <select id="accountType" required>
+                        <option value="student">Student</option>
+                        <option value="organizer">Event Organizer</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Enter your full name"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Create a password"
+                        minlength="8"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Re-enter your password"
+                        minlength="8"
+                        required>
+                </div>
+
+                <button
+                    type="submit"
+                    class="register-button"
+                    id="registerButton">
+
+                    Create Account
+
+                </button>
+
+                <p class="message" id="message"></p>
+
+            </form>
+
+            <p class="login-text">
+                Already have an account?
+                <a href="/login.html">Login here</a>
+            </p>
+
         </div>
-        <div class="summary-card">
-            <p>Total Registrations</p>
-            <strong id="registrationCount">—</strong>
-        </div>
-    </section>
 
-    <section id="results">
-        <div class="empty">
-            Select an event and click View Registrations.
-        </div>
-    </section>
-</main>
+    </main>
 
-<footer>© 2026 CampusConnect — Campus Event Portal</footer>
+    <footer>
+        © 2026 CampusConnect. Campus Event Portal.
+    </footer>
 
-<script>
-    const eventSelect = document.getElementById("eventSelect");
-    const loadButton = document.getElementById("loadButton");
-    const refreshButton = document.getElementById("refreshButton");
-    const results = document.getElementById("results");
-    const notice = document.getElementById("notice");
+    <script>
 
-    let allEvents = [];
+        const registrationForm =
+            document.getElementById("registrationForm");
 
-    function showError(message) {
-        notice.textContent = message;
-        notice.className = "notice error";
-    }
+        const message =
+            document.getElementById("message");
 
-    function clearNotice() {
-        notice.textContent = "";
-        notice.className = "notice";
-    }
+        const registerButton =
+            document.getElementById("registerButton");
 
-    function addCell(row, text, isHeader) {
-        const cell = document.createElement(isHeader ? "th" : "td");
-        cell.textContent = text;
-        row.appendChild(cell);
-    }
 
-    async function loadEvents() {
-        clearNotice();
-        eventSelect.replaceChildren();
+        registrationForm.addEventListener("submit", async function(event) {
 
-        const loadingOption = document.createElement("option");
-        loadingOption.value = "";
-        loadingOption.textContent = "Loading events...";
-        eventSelect.appendChild(loadingOption);
+            event.preventDefault();
 
-        try {
-            const response = await fetch("/events");
-            if (!response.ok) throw new Error("Unable to load events.");
+            const accountType =
+                document.getElementById("accountType").value;
 
-            allEvents = await response.json();
-            eventSelect.replaceChildren();
+            const name =
+                document.getElementById("name").value.trim();
 
-            if (allEvents.length === 0) {
-                const option = document.createElement("option");
-                option.value = "";
-                option.textContent = "No events available";
-                eventSelect.appendChild(option);
+            const email =
+                document.getElementById("email").value.trim();
+
+            const password =
+                document.getElementById("password").value;
+
+            const confirmPassword =
+                document.getElementById("confirmPassword").value;
+
+
+            message.style.color = "#dc2626";
+            message.textContent = "";
+
+
+            if (name.length < 2) {
+                message.textContent = "Please enter a valid name.";
                 return;
             }
 
-            allEvents.forEach(event => {
-                const option = document.createElement("option");
-                option.value = event.eventId;
-                option.textContent =
-                    event.title + " (ID: " + event.eventId + ")";
-                eventSelect.appendChild(option);
-            });
-
-            const params = new URLSearchParams(window.location.search);
-            const requestedId = params.get("eventId");
-
-            if (requestedId &&
-                allEvents.some(event => String(event.eventId) === requestedId)) {
-                eventSelect.value = requestedId;
-                await loadRegistrations();
-            }
-        } catch (error) {
-            eventSelect.replaceChildren();
-            const option = document.createElement("option");
-            option.value = "";
-            option.textContent = "Could not load events";
-            eventSelect.appendChild(option);
-            showError(
-                "Could not load events. Make sure the Java server is running."
-            );
-        }
-    }
-
-    async function loadRegistrations() {
-        clearNotice();
-
-        const eventId = eventSelect.value;
-        const selected = allEvents.find(
-            event => String(event.eventId) === eventId
-        );
-
-        if (!selected) {
-            showError("Please select an event first.");
-            return;
-        }
-
-        document.getElementById("selectedEvent").textContent = selected.title;
-        document.getElementById("registrationCount").textContent = "…";
-        results.replaceChildren();
-
-        const loading = document.createElement("div");
-        loading.className = "empty";
-        loading.textContent = "Loading registrations...";
-        results.appendChild(loading);
-
-        try {
-            const response = await fetch(
-                "/registrations?eventId=" + encodeURIComponent(eventId)
-            );
-
-            const responseText = await response.text();
-
-            if (!response.ok) throw new Error(responseText);
-
-            const registrations = JSON.parse(responseText);
-            document.getElementById("registrationCount").textContent =
-                registrations.length;
-
-            results.replaceChildren();
-
-            if (registrations.length === 0) {
-                const empty = document.createElement("div");
-                empty.className = "empty";
-                empty.textContent =
-                    "No students have registered for this event yet.";
-                results.appendChild(empty);
+            if (password.length < 8) {
+                message.textContent =
+                    "Password must contain at least 8 characters.";
                 return;
             }
 
-            const wrapper = document.createElement("div");
-            wrapper.className = "table-wrapper";
+            if (password !== confirmPassword) {
+                message.textContent = "Passwords do not match.";
+                return;
+            }
 
-            const table = document.createElement("table");
-            const thead = document.createElement("thead");
-            const headerRow = document.createElement("tr");
 
-            [
-                "Registration ID",
-                "Student ID",
-                "Student Name",
-                "Student Email",
-                "Registration Date"
-            ].forEach(text => addCell(headerRow, text, true));
+            const endpoint =
+                accountType === "organizer"
+                    ? "/organizer-signup"
+                    : "/signup";
 
-            thead.appendChild(headerRow);
-            table.appendChild(thead);
 
-            const tbody = document.createElement("tbody");
+            const formData = new URLSearchParams();
 
-            registrations.forEach(registration => {
-                const row = document.createElement("tr");
+            formData.append("name", name);
+            formData.append("email", email);
+            formData.append("password", password);
 
-                addCell(row, String(registration.registrationId), false);
-                addCell(row, String(registration.studentId), false);
-                addCell(row, registration.studentName || "Unknown", false);
-                addCell(row, registration.studentEmail || "Not available", false);
-                addCell(row, registration.registrationDate || "—", false);
 
-                tbody.appendChild(row);
-            });
+            registerButton.disabled = true;
+            registerButton.textContent = "Creating Account...";
 
-            table.appendChild(tbody);
-            wrapper.appendChild(table);
-            results.appendChild(wrapper);
+            message.style.color = "#64748b";
+            message.textContent = "Please wait...";
 
-        } catch (error) {
-            results.replaceChildren();
-            document.getElementById("registrationCount").textContent = "—";
-            showError(
-                error.message || "Could not load student registrations."
-            );
-        }
-    }
 
-    loadButton.addEventListener("click", loadRegistrations);
-    refreshButton.addEventListener("click", loadEvents);
+            try {
 
-    loadEvents();
-</script>
+                const response = await fetch(endpoint, {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+                    },
+
+                    body: formData.toString()
+                });
+
+
+                const responseText = await response.text();
+
+                let result = {};
+
+                try {
+                    result = JSON.parse(responseText);
+                } catch {
+                    result = { message: responseText };
+                }
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.message ||
+                        result.detail ||
+                        responseText ||
+                        "Registration failed."
+                    );
+
+                }
+
+
+                message.style.color = "#16a34a";
+
+                message.textContent =
+                    result.message ||
+                    "Account created successfully! Redirecting to login...";
+
+
+                registrationForm.reset();
+
+                setTimeout(function() {
+                    window.location.href = "/login.html";
+                }, 1800);
+
+
+            } catch (error) {
+
+                message.style.color = "#dc2626";
+
+                message.textContent =
+                    error.message ||
+                    "Unable to connect to the server.";
+
+            } finally {
+
+                registerButton.disabled = false;
+
+                registerButton.textContent = "Create Account";
+
+            }
+
+        });
+
+    </script>
 
 </body>
 </html>
